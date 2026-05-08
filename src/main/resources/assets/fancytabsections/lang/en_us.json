@@ -1,5 +1,8 @@
 {
-  "itemGroup.fancytabsectionslivestreammod.core": "Core",
-  "itemGroup.fancytabsections.dimensional_vortex": "Dimensional Vorex",
-  "itemGroup.fancytabsections.copperbackport": "Copper Copper Copper"
+  "itemGroup.fancytabsections.apples": "Apples",
+  "itemGroup.fancytabsections.even_more_shiny": "Even More Shiny Things!",
+  "itemGroup.fts.shiny_things": "Shiny Things",
+  "itemGroup.fts.dirty_tools": "Dirty Tools",
+  "itemGroup.livestreammod.very_dirty_tools": "Very Dirty Tools",
+  "itemGroup.livestreammod.decently_dirty_tools": "Decently Dirty Tools"
 }

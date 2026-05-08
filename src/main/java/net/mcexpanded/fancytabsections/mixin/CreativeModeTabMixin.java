@@ -2,11 +2,15 @@ package net.mcexpanded.fancytabsections.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.mcexpanded.fancytabsections.creativetab.ModCreativeTabs;
-import net.mcexpanded.fancytabsections.creativetab.TabLayout;
+import net.mcexpanded.fancytabsections.FancyTabSections;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,19 +23,24 @@ public class CreativeModeTabMixin
     private void buildContents(CreativeModeTab.ItemDisplayParameters parameters, Operation<Void> original)
     {
         CreativeModeTab self = (CreativeModeTab) (Object) this;
-        if (self != ModCreativeTabs.CORE.get())
+
+        Identifier rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(self);
+
+        if (FancyTabSections.SECTIONS_MAP.containsKey(rl))
+        {
+            // Bypass vanilla's output validation — set fields directly
+            List<ItemStack> display = FancyTabSections.ITEMS_MAP.get(rl);
+
+            ((CreativeModeTabAccessor) self).setDisplayItems(display);
+            ((CreativeModeTabAccessor) self).setDisplayItemsSearchTab(
+                    display.stream()
+                            .filter(s -> !s.isEmpty())
+                            .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new))
+            );
+        }
+        else
         {
             original.call(parameters);
-            return;
         }
-
-        // Bypass vanilla's output validation — set fields directly
-        List<ItemStack> display = TabLayout.CACHED_ITEMS;
-        ((CreativeModeTabAccessor) self).setDisplayItems(display);
-        ((CreativeModeTabAccessor) self).setDisplayItemsSearchTab(
-                display.stream()
-                        .filter(s -> !s.isEmpty())
-                        .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new))
-        );
     }
 }

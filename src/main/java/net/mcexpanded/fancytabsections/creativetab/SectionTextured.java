@@ -7,19 +7,19 @@ import net.minecraft.world.item.Item;
 import java.util.List;
 
 public record SectionTextured(
-        String id,
+        Identifier id,
         Component title,
         Identifier texture,
         int textColor,
         List<Item> items
 ) implements Section {
 
-    /** Builds the texture path automatically: [modId]:textures/gui/tab_overlay/[id].png */
-    public static SectionTextured of(String modId, String id, Component title, int textColor, List<Item> items) {
+    /** The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png */
+    public static SectionTextured of(Identifier id, Component title, int textColor, List<Item> items) {
         return new SectionTextured(
                 id,
                 title,
-                Identifier.fromNamespaceAndPath(modId, "textures/gui/tab_overlay/" + id + ".png"),
+                Identifier.fromNamespaceAndPath(id.getNamespace(), "textures/gui/fancy_tab_section/" + id.getPath() + ".png"),
                 textColor,
                 items
         );

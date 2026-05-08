@@ -1,17 +1,11 @@
 package net.mcexpanded.fancytabsections;
 
-import net.mcexpanded.fancytabsections.creativetab.ModCreativeTabs;
 import net.mcexpanded.fancytabsections.creativetab.Section;
-import net.mcexpanded.fancytabsections.creativetab.SectionColored;
-import net.mcexpanded.fancytabsections.creativetab.SectionTextured;
-import net.minecraft.network.chat.Component;
+import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
@@ -25,26 +19,28 @@ public class FancyTabSections
 {
     public static final String MOD_ID = "fancytabsections";
 
-    public FancyTabSections(IEventBus modEventBus, ModContainer modContainer)
+    /** An example of an implementation can be found on FTSExampleMod */
+    public FancyTabSections(IEventBus modEventBus)
     {
-        ModCreativeTabs.register(modEventBus);
+        //load all itemStacks on event to make sure every mod has already added their items
+        modEventBus.addListener(BuildCreativeModeTabContentsEvent.class, o -> TabLayout.build());
     }
 
-    public static final Map<Identifier, List<Section>> map = new HashMap<>();
+    public static final Map<Identifier, List<Section>> SECTIONS_MAP = new HashMap<>();
+    public static final Map<Identifier, List<ItemStack>> ITEMS_MAP = new HashMap<>();
 
-
-
+    /** Adds a Fancy Tab Section to the given CreativeModeTab Identifier */
     public static void addSection(Identifier tab, Section section)
     {
-        if (map.containsKey(tab))
+        if (SECTIONS_MAP.containsKey(tab))
         {
-            List<Section> list = new ArrayList<>(map.get(tab));
+            List<Section> list = new ArrayList<>(SECTIONS_MAP.get(tab));
             list.add(section);
-            map.put(tab, List.copyOf(list));
+            SECTIONS_MAP.put(tab, List.copyOf(list));
         }
         else
         {
-            map.put(tab, List.of(section));
+            SECTIONS_MAP.put(tab, List.of(section));
         }
     }
 }
