@@ -19,7 +19,7 @@ public record SectionTextured(
         return new SectionTextured(
                 id,
                 title,
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "textures/gui/fancy_tab_section/" + id.getPath() + ".png"),
+                new ResourceLocation(id.getNamespace(), "textures/gui/fancy_tab_section/" + id.getPath() + ".png"),
                 textColor,
                 items
         );

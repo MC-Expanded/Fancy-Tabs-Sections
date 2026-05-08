@@ -8,8 +8,8 @@ issueTrackerURL="https://github.com/MC-Expanded/Fancy-Tabs-Neo/issues" #optional
 
 [[mods]] #mandatory
 modId="fancytabsections"
-version="${mod_version}"
-displayName="${mod_name}"
+version="1.0-FORGE-1.20.1"
+displayName="Fancy Tab Sections"
 displayURL="http://curseforge.com/minecraft/mc-mods/fancy-tab-sections"
 logoFile = "icon.png"
 mod_authors="wdiscute, Kaupenjoe, nanoattack"
@@ -20,17 +20,16 @@ A library to allow for easy control of Sections inside Creative Mode Tabs
 [[mixins]]
 config="fancytabsections.mixins.json"
 
-
 [[dependencies.fancytabsections]] #optional
-modId="neoforge" #mandatory
-type="required" #mandatory
-versionRange="${neo_version_range}" #mandatory
-ordering="AFTER"
+modId="forge" #mandatory
+mandatory=true #mandatory
+versionRange="[47.3,)" #mandatory
+ordering="NONE"
 side="BOTH"
 
 [[dependencies.fancytabsections]]
 modId="minecraft"
-type="required"
-versionRange="${minecraft_version_range}"
+mandatory=true
+versionRange="[1.20.1,1.21)"
 ordering="AFTER"
 side="BOTH"

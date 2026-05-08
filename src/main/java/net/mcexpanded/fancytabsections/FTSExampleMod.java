@@ -3,32 +3,33 @@ package net.mcexpanded.fancytabsections;
 import net.mcexpanded.fancytabsections.creativetab.SectionColored;
 import net.mcexpanded.fancytabsections.creativetab.SectionTextured;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-@Mod(FancyTabSections.MOD_ID)
 public class FTSExampleMod
 {
     public static ResourceLocation rl(String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, path);
+        return new ResourceLocation(FancyTabSections.MOD_ID, path);
     }
 
     /** Example of an implementation of FancyTabSections */
-    public FTSExampleMod(IEventBus modEventBus)
+    public FTSExampleMod()
     {
-        //if(true) return; //prevents lib from actually adding stuff
+        if(true) return; //prevents lib from actually adding stuff
 
         //register our creative mode tabs as usual, leaving them empty
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         FTSExampleCreativeModeTabs.register(modEventBus);
 
         /* This adds a solid coloured section to the creative mode tab registered under the ID "shiny_things" */
@@ -117,7 +118,7 @@ public class FTSExampleMod
     public static class FTSExampleCreativeModeTabs
     {
         public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-                DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, FancyTabSections.MOD_ID);
+                DeferredRegister.create(Registries.CREATIVE_MODE_TAB, FancyTabSections.MOD_ID);
 
         public static final Supplier<CreativeModeTab> SHINY_THINGS = CREATIVE_MODE_TABS.register("shiny_things", () -> CreativeModeTab.builder()
                 .icon(() -> new ItemStack(Items.DIAMOND))

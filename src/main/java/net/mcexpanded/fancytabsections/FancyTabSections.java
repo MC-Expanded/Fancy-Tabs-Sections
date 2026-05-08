@@ -4,9 +4,10 @@ import net.mcexpanded.fancytabsections.creativetab.Section;
 import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +20,17 @@ public class FancyTabSections
     public static final String MOD_ID = "fancytabsections";
 
     /** An example of an implementation can be found on FTSExampleMod */
-    public FancyTabSections(IEventBus modEventBus)
+    public FancyTabSections()
     {
+        new FTSExampleMod();
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         //load all itemStacks on event to make sure every mod has already added their items
-        modEventBus.addListener(BuildCreativeModeTabContentsEvent.class, o -> TabLayout.build());
+        modEventBus.addListener(this::addCreative);
+    }
+
+    public void addCreative(BuildCreativeModeTabContentsEvent event)
+    {
+        TabLayout.build();
     }
 
     public static final Map<ResourceLocation, List<Section>> SECTIONS_MAP = new HashMap<>();
