@@ -1,7 +1,7 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
 import net.mcexpanded.fancytabsections.FancyTabSections;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class TabLayout
 {
 
-    public static final Map<Identifier, Integer> SECTION_ROW = new HashMap<>();
+    public static final Map<ResourceLocation, Integer> SECTION_ROW = new HashMap<>();
 
     public static void build()
     {

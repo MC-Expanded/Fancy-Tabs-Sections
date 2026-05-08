@@ -2,10 +2,9 @@ package net.mcexpanded.fancytabsections;
 
 import net.mcexpanded.fancytabsections.creativetab.Section;
 import net.mcexpanded.fancytabsections.creativetab.TabLayout;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
@@ -26,11 +25,11 @@ public class FancyTabSections
         modEventBus.addListener(BuildCreativeModeTabContentsEvent.class, o -> TabLayout.build());
     }
 
-    public static final Map<Identifier, List<Section>> SECTIONS_MAP = new HashMap<>();
-    public static final Map<Identifier, List<ItemStack>> ITEMS_MAP = new HashMap<>();
+    public static final Map<ResourceLocation, List<Section>> SECTIONS_MAP = new HashMap<>();
+    public static final Map<ResourceLocation, List<ItemStack>> ITEMS_MAP = new HashMap<>();
 
     /** Adds a Fancy Tab Section to the given CreativeModeTab Identifier */
-    public static void addSection(Identifier tab, Section section)
+    public static void addSection(ResourceLocation tab, Section section)
     {
         if (SECTIONS_MAP.containsKey(tab))
         {

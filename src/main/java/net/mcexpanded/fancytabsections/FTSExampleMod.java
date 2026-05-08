@@ -4,7 +4,7 @@ import net.mcexpanded.fancytabsections.creativetab.SectionColored;
 import net.mcexpanded.fancytabsections.creativetab.SectionTextured;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,15 +18,15 @@ import java.util.function.Supplier;
 @Mod(FancyTabSections.MOD_ID)
 public class FTSExampleMod
 {
-    public static Identifier rl(String path)
+    public static ResourceLocation rl(String path)
     {
-        return Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, path);
+        return ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, path);
     }
 
     /** Example of an implementation of FancyTabSections */
     public FTSExampleMod(IEventBus modEventBus)
     {
-        if(true) return; //prevents lib from actually adding stuff
+        //if(true) return; //prevents lib from actually adding stuff
 
         //register our creative mode tabs as usual, leaving them empty
         FTSExampleCreativeModeTabs.register(modEventBus);
@@ -107,8 +107,8 @@ public class FTSExampleMod
                         0xFFFFFFFF,
                         List.of(
                                 Items.IRON_SWORD,
-                                Items.COPPER_SHOVEL,
-                                Items.COPPER_HOE
+                                Items.STONE_SHOVEL,
+                                Items.STONE_HOE
                         )
                 )
         );
@@ -122,7 +122,7 @@ public class FTSExampleMod
         public static final Supplier<CreativeModeTab> SHINY_THINGS = CREATIVE_MODE_TABS.register("shiny_things", () -> CreativeModeTab.builder()
                 .icon(() -> new ItemStack(Items.DIAMOND))
                 .title(Component.translatable("itemGroup.fts.shiny_things"))
-                .displayItems((_, _) ->
+                .displayItems((params, output) ->
                 {
                     // Intentionally empty as we add the items through FancyTabsSections#addSection
                 })

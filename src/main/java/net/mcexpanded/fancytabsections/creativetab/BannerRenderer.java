@@ -2,9 +2,8 @@ package net.mcexpanded.fancytabsections.creativetab;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public class BannerRenderer {
     private static final int GRID_X_OFFSET = 10;
     private static final int GRID_Y_OFFSET = 17;
 
-    public static void render(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics, List<Section> sections) {
-        int left = screen.getLeftPos() + GRID_X_OFFSET;
-        int top  = screen.getTopPos()  + GRID_Y_OFFSET;
+    public static void render(CreativeModeInventoryScreen screen, GuiGraphics graphics, List<Section> sections) {
+        int left = screen.getGuiLeft() + GRID_X_OFFSET;
+        int top  = screen.getGuiTop()  + GRID_Y_OFFSET;
         int w    = GRID_COLS * ROW_HEIGHT - 4;
 
         Font font = Minecraft.getInstance().font;
@@ -39,12 +38,12 @@ public class BannerRenderer {
                 graphics.fill(x - 1, y, x + w + 1, y + h, colored.bannerColor());
                 graphics.fill(x - 1, y, x + w + 1, y + 1, brighten(colored.bannerColor(), 0.4f));
             } else if (section instanceof SectionTextured textured) {
-                graphics.blit(RenderPipelines.GUI_TEXTURED, textured.texture(), x - 1, y, 0, 0, w + 2, h, w + 2, h);
+                graphics.blit(textured.texture(), x - 1, y, 0, 0, w + 2, h, w + 2, h);
             }
 
             int textX = x + 4;
             int textY = y + (h - font.lineHeight) / 2;
-            graphics.text(font, section.title(), textX, textY, section.textColor(), true);
+            graphics.drawString(font, section.title(), textX, textY, section.textColor(), true);
         }
     }
 
