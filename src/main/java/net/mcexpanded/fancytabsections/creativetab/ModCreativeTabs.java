@@ -33,7 +33,7 @@ public class ModCreativeTabs
 
     public static void init()
     {
-        List<Section> sections = ModSections.build();
+        List<Section> sections = List.of();
         TabLayout.build(sections); // populates CACHED_ITEMS and SECTION_ROW
     }
 }

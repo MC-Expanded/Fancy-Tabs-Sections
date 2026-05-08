@@ -32,15 +32,7 @@ public class FancyTabSections
 
     public static final Map<Identifier, List<Section>> map = new HashMap<>();
 
-    public static Identifier rl(String ns, String path)
-    {
-        return Identifier.fromNamespaceAndPath(ns, path);
-    }
 
-    public static Identifier rl(String path)
-    {
-        return Identifier.fromNamespaceAndPath(MOD_ID, path);
-    }
 
     public static void addSection(Identifier tab, Section section)
     {
@@ -53,67 +45,6 @@ public class FancyTabSections
         else
         {
             map.put(tab, List.of(section));
-        }
-    }
-
-    @EventBusSubscriber(modid = MOD_ID)
-    public static class Events
-    {
-        @SubscribeEvent
-        private static void addCreative(BuildCreativeModeTabContentsEvent event)
-        {
-            addSection(rl("test"),
-                    new SectionColored(
-                            "core",
-                            Component.translatable("itemGroup.livestreammod.core"),
-                            0xFF1a1a2e,   // ARGB banner background
-                            0xFFFFFFFF,
-                            List.of(
-                                    Items.ANDESITE,
-                                    Items.APPLE
-                            )
-                    )
-            );
-
-            addSection(rl("test"),
-                    new SectionColored(
-                            "modules",
-                            Component.translatable("itemGroup.livestreammod.dimensional_vortex"),
-                            0xFF1a2e1a,
-                            0xFFFFFFFF,
-                            List.of(
-                                    Items.COPPER_PICKAXE
-                            )
-                    )
-            );
-
-            addSection(rl("test"),
-                    new SectionColored(
-                            "copperbackport",
-                            Component.translatable("itemGroup.livestreammod.copperbackport"),
-                            0xFFcc6600,
-                            0xFFFFFFFF,
-                            List.of(
-                                    Items.COPPER_CHESTPLATE,
-                                    Items.LLAMA_SPAWN_EGG
-                            )
-                    )
-            );
-
-            addSection(rl("test"),
-                    SectionTextured.of(
-                            FancyTabSections.MOD_ID,
-                            "beta_tools",
-                            Component.literal("Beta Stage - Unfinished"),
-                            0xFFFFFFFF,
-                            List.of(
-                                    Items.LLAMA_SPAWN_EGG,
-                                    Blocks.LAPIS_ORE.asItem()
-                            )
-                    )
-            );
-
-            ModCreativeTabs.init();
         }
     }
 }
