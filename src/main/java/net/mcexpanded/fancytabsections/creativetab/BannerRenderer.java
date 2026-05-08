@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 
+import java.util.List;
+
 public class BannerRenderer {
 
     public static int CURRENT_ROW = 0;
@@ -15,14 +17,14 @@ public class BannerRenderer {
     private static final int GRID_X_OFFSET = 10;
     private static final int GRID_Y_OFFSET = 17;
 
-    public static void render(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics) {
+    public static void render(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics, List<Section> sections) {
         int left = screen.getLeftPos() + GRID_X_OFFSET;
         int top  = screen.getTopPos()  + GRID_Y_OFFSET;
         int w    = GRID_COLS * ROW_HEIGHT - 4;
 
         Font font = Minecraft.getInstance().font;
 
-        for (Section section : ModSections.ALL) {
+        for (Section section : sections) {
             Integer sectionRow = TabLayout.SECTION_ROW.get(section.id());
             if (sectionRow == null) continue;
 

@@ -45,7 +45,7 @@ public class TabLayout {
             }
         }
 
-        CACHED_ITEMS = result; // result.stream().map(ItemStackTemplate::fromNonEmptyStack).toList();
+        CACHED_ITEMS = result;
         return result;
     }
 }

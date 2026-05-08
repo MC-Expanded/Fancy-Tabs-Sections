@@ -1,51 +1,119 @@
 package net.mcexpanded.fancytabsections;
 
-import com.mojang.logging.LogUtils;
 import net.mcexpanded.fancytabsections.creativetab.ModCreativeTabs;
+import net.mcexpanded.fancytabsections.creativetab.Section;
+import net.mcexpanded.fancytabsections.creativetab.SectionColored;
+import net.mcexpanded.fancytabsections.creativetab.SectionTextured;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Mod(FancyTabSections.MOD_ID)
-public class FancyTabSections {
+public class FancyTabSections
+{
     public static final String MOD_ID = "fancytabsections";
-    public static final Logger LOGGER = LogUtils.getLogger();
 
-    // The constructor for the mod class is the first code that is run when your mod is loaded.
-    // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public FancyTabSections(IEventBus modEventBus, ModContainer modContainer) {
-        modEventBus.addListener(this::commonSetup);
-
+    public FancyTabSections(IEventBus modEventBus, ModContainer modContainer)
+    {
         ModCreativeTabs.register(modEventBus);
-        NeoForge.EVENT_BUS.register(this);
-
-        // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
-
-        // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
+    public static final Map<Identifier, List<Section>> map = new HashMap<>();
 
+    public static Identifier rl(String ns, String path)
+    {
+        return Identifier.fromNamespaceAndPath(ns, path);
     }
 
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        ModCreativeTabs.init();
+    public static Identifier rl(String path)
+    {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
+    public static void addSection(Identifier tab, Section section)
+    {
+        if (map.containsKey(tab))
+        {
+            List<Section> list = new ArrayList<>(map.get(tab));
+            list.add(section);
+            map.put(tab, List.copyOf(list));
+        }
+        else
+        {
+            map.put(tab, List.of(section));
+        }
+    }
 
+    @EventBusSubscriber(modid = MOD_ID)
+    public static class Events
+    {
+        @SubscribeEvent
+        private static void addCreative(BuildCreativeModeTabContentsEvent event)
+        {
+            addSection(rl("test"),
+                    new SectionColored(
+                            "core",
+                            Component.translatable("itemGroup.livestreammod.core"),
+                            0xFF1a1a2e,   // ARGB banner background
+                            0xFFFFFFFF,
+                            List.of(
+                                    Items.ANDESITE,
+                                    Items.APPLE
+                            )
+                    )
+            );
+
+            addSection(rl("test"),
+                    new SectionColored(
+                            "modules",
+                            Component.translatable("itemGroup.livestreammod.dimensional_vortex"),
+                            0xFF1a2e1a,
+                            0xFFFFFFFF,
+                            List.of(
+                                    Items.COPPER_PICKAXE
+                            )
+                    )
+            );
+
+            addSection(rl("test"),
+                    new SectionColored(
+                            "copperbackport",
+                            Component.translatable("itemGroup.livestreammod.copperbackport"),
+                            0xFFcc6600,
+                            0xFFFFFFFF,
+                            List.of(
+                                    Items.COPPER_CHESTPLATE,
+                                    Items.LLAMA_SPAWN_EGG
+                            )
+                    )
+            );
+
+            addSection(rl("test"),
+                    SectionTextured.of(
+                            FancyTabSections.MOD_ID,
+                            "beta_tools",
+                            Component.literal("Beta Stage - Unfinished"),
+                            0xFFFFFFFF,
+                            List.of(
+                                    Items.LLAMA_SPAWN_EGG,
+                                    Blocks.LAPIS_ORE.asItem()
+                            )
+                    )
+            );
+
+            ModCreativeTabs.init();
+        }
     }
 }

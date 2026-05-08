@@ -12,12 +12,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 @Mixin(CreativeModeTab.class)
-public class CreativeModeTabMixin {
+public class CreativeModeTabMixin
+{
 
     @WrapMethod(method = "buildContents")
-    private void msgwoft$buildContents(CreativeModeTab.ItemDisplayParameters parameters, Operation<Void> original) {
-        CreativeModeTab self = (CreativeModeTab)(Object) this;
-        if (self != ModCreativeTabs.CORE.get()) {
+    private void buildContents(CreativeModeTab.ItemDisplayParameters parameters, Operation<Void> original)
+    {
+        CreativeModeTab self = (CreativeModeTab) (Object) this;
+        if (self != ModCreativeTabs.CORE.get())
+        {
             original.call(parameters);
             return;
         }
