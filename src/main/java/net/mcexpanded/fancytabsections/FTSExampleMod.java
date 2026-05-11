@@ -26,7 +26,7 @@ public class FTSExampleMod
     /** Example of an implementation of FancyTabSections */
     public FTSExampleMod(IEventBus modEventBus)
     {
-        //if(true) return; //prevents lib from actually adding stuff
+        if(true) return; //prevents lib from actually adding stuff
 
         //register our creative mode tabs as usual, leaving them empty
         FTSExampleCreativeModeTabs.register(modEventBus);
