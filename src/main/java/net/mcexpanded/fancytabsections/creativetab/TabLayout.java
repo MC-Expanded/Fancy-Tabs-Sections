@@ -32,9 +32,7 @@ public class TabLayout
                 }
                 row++;
 
-                List<ItemStack> stacks = section.items().stream()
-                        .map(ItemStack::new)
-                        .toList();
+                List<ItemStack> stacks = section.items().toStacks();
                 result.addAll(stacks);
 
                 int itemCount = stacks.size();

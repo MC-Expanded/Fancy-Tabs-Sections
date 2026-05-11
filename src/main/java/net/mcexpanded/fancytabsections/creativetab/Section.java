@@ -10,5 +10,5 @@ public interface Section {
     Identifier id();
     Component title();
     int textColor();
-    List<Item> items();
+    ConglomerateOfItems items();
 }
