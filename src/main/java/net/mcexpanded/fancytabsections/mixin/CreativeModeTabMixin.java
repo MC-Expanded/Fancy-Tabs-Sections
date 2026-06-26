@@ -6,11 +6,7 @@ import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-
-import java.util.LinkedHashSet;
-import java.util.List;
 
 @Mixin(CreativeModeTab.class)
 public class CreativeModeTabMixin
@@ -25,15 +21,7 @@ public class CreativeModeTabMixin
 
         if (FancyTabSections.SECTIONS_MAP.containsKey(rl))
         {
-            // Bypass vanilla's output validation — set fields directly
-            List<ItemStack> display = FancyTabSections.ITEMS_MAP.get(rl);
-
-            ((CreativeModeTabAccessor) self).setDisplayItems(display);
-            ((CreativeModeTabAccessor) self).setDisplayItemsSearchTab(
-                    display.stream()
-                            .filter(s -> !s.isEmpty())
-                            .collect(java.util.stream.Collectors.toCollection(LinkedHashSet::new))
-            );
+            FancyTabSections.applyItems(self);
         }
         else
         {

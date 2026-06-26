@@ -31,7 +31,7 @@ public class FTSExampleMod
     public FTSExampleMod(IEventBus modEventBus)
     {
         //prevents example mod from running adding stuff
-        if (true) return;
+        //if (true) return;
 
         //register our creative mode tabs as usual, leaving them empty
         FTSExampleCreativeModeTabs.register(modEventBus);
@@ -54,6 +54,8 @@ public class FTSExampleMod
                         0xFF1a1a2e,
                         //text color - ARGB
                         0xFFFFFFFF,
+                        //if the section can be collapsed
+                        true,
                         //creates a new conglomerate - items are listed in the order they are added
                         ConglomerateOfItems.create()
                                 //adds a modded item
@@ -73,6 +75,7 @@ public class FTSExampleMod
                         rl("shiny"),
                         Component.literal(""),
                         0xFFFFFFFF,
+                        true,
                         ConglomerateOfItems.create()
                                 .add(Items.DIAMOND)
                                 .add(Items.GOLDEN_HOE)
@@ -80,13 +83,16 @@ public class FTSExampleMod
                 )
         );
 
-        /* This adds a third section to "shiny_things" */
+        /* This adds a third section to "shiny_things". The trailing `true` makes it collapsible:
+           a +/- toggle appears in the right-most slot of the banner row, and clicking it
+           hides/shows this section's items. */
         FancyTabSections.addSection(rl("shiny_things"),
                 new SectionColored(
                         rl("even_more_shiny"),
                         Component.translatable("itemGroup.fancytabsections.even_more_shiny"),
                         0xFF1a2e1a,
                         0xFFFFFFFF,
+                        true,
                         ConglomerateOfItems.create()
                                 .add(Items.EMERALD)
                                 .add(Items.GLISTERING_MELON_SLICE)
@@ -110,6 +116,7 @@ public class FTSExampleMod
                         Component.translatable("itemGroup.livestreammod.very_dirty_tools"),
                         0xFF1a1a2e,
                         0xFFFFFFFF,
+                        true,
                         ConglomerateOfItems.create()
                                 .add(Items.WOODEN_AXE)
                                 .add(Items.WOODEN_HOE)
