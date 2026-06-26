@@ -14,7 +14,7 @@ public record SectionTextured(
 
     /** The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png when using this builder */
     public static SectionTextured of(ResourceLocation id, Component title, int textColor, boolean collapsible, ConglomerateOfItems items) {
-        return of(id, title, textColor, collapsible, items);
+        return of(id, title, textColor, items, collapsible);
     }
 
     /** As {@link #of(ResourceLocation, Component, int, ConglomerateOfItems)}, with collapsible opt-in. */
