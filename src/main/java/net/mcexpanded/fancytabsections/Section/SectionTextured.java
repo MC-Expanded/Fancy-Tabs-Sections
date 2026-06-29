@@ -1,5 +1,8 @@
-package net.mcexpanded.fancytabsections.creativetab;
+package net.mcexpanded.fancytabsections.Section;
 
+import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,8 +31,9 @@ public record SectionTextured(
         );
     }
 
-    public static SectionTextured of(ResourceLocation id, Component title, int textColor, ConglomerateOfItems items)
+    @Override
+    public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
     {
-        return of(id, title, textColor, true, items);
+        guiGraphics.blit(texture, topLeftX, topLeftY, (int) (18 * System.currentTimeMillis()), 0, 162, 18, 162, 18, 162, 18);
     }
 }

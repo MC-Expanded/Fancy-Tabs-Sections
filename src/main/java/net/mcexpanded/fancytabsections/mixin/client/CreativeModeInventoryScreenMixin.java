@@ -2,7 +2,7 @@ package net.mcexpanded.fancytabsections.mixin.client;
 
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
-import net.mcexpanded.fancytabsections.creativetab.Section;
+import net.mcexpanded.fancytabsections.Section.Section;
 import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -60,7 +60,7 @@ public abstract class CreativeModeInventoryScreenMixin
                 this.selectTab(selectedTab);
 
                 Minecraft.getInstance().getSoundManager().play(
-                        SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1.0F));
 
                 cir.setReturnValue(true);
                 return;

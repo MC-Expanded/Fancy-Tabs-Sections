@@ -1,6 +1,7 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
 import net.mcexpanded.fancytabsections.FancyTabSections;
+import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 

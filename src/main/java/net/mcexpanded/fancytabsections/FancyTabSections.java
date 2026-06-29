@@ -1,6 +1,6 @@
 package net.mcexpanded.fancytabsections;
 
-import net.mcexpanded.fancytabsections.creativetab.Section;
+import net.mcexpanded.fancytabsections.Section.Section;
 import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.mcexpanded.fancytabsections.mixin.CreativeModeTabAccessor;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,7 +24,9 @@ public class FancyTabSections
 {
     public static final String MOD_ID = "fancytabsections";
 
-    /** An example of an implementation can be found on FTSExampleMod */
+    /**
+     * An example of an implementation can be found on FTSExampleMod
+     */
     public FancyTabSections(IEventBus modEventBus)
     {
         //load all itemStacks on event to make sure every mod has already added their items
@@ -33,7 +35,9 @@ public class FancyTabSections
 
     public static final Map<ResourceLocation, List<Section>> SECTIONS_MAP = new HashMap<>();
     public static final Map<ResourceLocation, List<ItemStack>> ITEMS_MAP = new HashMap<>();
-    /** Full (collapse-agnostic) search-tab contents per tab id. */
+    /**
+     * Full (collapse-agnostic) search-tab contents per tab id.
+     */
     public static final Map<ResourceLocation, Set<ItemStack>> SEARCH_MAP = new HashMap<>();
 
     public static void applyItems(CreativeModeTab tab)
@@ -59,7 +63,9 @@ public class FancyTabSections
         }
     }
 
-    /** Adds a Fancy Tab Section to the given CreativeModeTab Identifier */
+    /**
+     * Adds a Fancy Tab Section to the given CreativeModeTab Identifier
+     */
     public static void addSection(ResourceLocation tab, Section section)
     {
         if (SECTIONS_MAP.containsKey(tab))

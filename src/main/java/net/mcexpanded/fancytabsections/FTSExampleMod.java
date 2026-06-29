@@ -1,8 +1,9 @@
 package net.mcexpanded.fancytabsections;
 
+import net.mcexpanded.fancytabsections.Section.SectionAnimatedTextured;
 import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
-import net.mcexpanded.fancytabsections.creativetab.SectionColored;
-import net.mcexpanded.fancytabsections.creativetab.SectionTextured;
+import net.mcexpanded.fancytabsections.Section.SectionColored;
+import net.mcexpanded.fancytabsections.Section.SectionTextured;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +55,8 @@ public class FTSExampleMod
                         0xFF1a1a2e,
                         //text color - ARGB
                         0xFFFFFFFF,
+                        //text shadow
+                        true,
                         //if the section can be collapsed
                         true,
                         //creates a new conglomerate - items are listed in the order they are added
@@ -71,10 +74,13 @@ public class FTSExampleMod
 
         /* This adds a textured coloured section to the creative mode tab registered under the ID "shiny_things" */
         FancyTabSections.addSection(rl("shiny_things"),
-                SectionTextured.of(
-                        rl("shiny"),
-                        Component.literal(""),
+                SectionAnimatedTextured.of(
+                        rl("shiny_animation"),
+                        Component.literal("Shiny Things!"),
+                        18,
+                        100,
                         0xFFFFFFFF,
+                        true,
                         true,
                         ConglomerateOfItems.create()
                                 .add(Items.DIAMOND)
@@ -92,6 +98,7 @@ public class FTSExampleMod
                         Component.translatable("itemGroup.fancytabsections.even_more_shiny"),
                         0xFF1a2e1a,
                         0xFFFFFFFF,
+                        true,
                         true,
                         ConglomerateOfItems.create()
                                 .add(Items.EMERALD)
@@ -116,6 +123,7 @@ public class FTSExampleMod
                         Component.translatable("itemGroup.livestreammod.very_dirty_tools"),
                         0xFF1a1a2e,
                         0xFFFFFFFF,
+                        true,
                         true,
                         ConglomerateOfItems.create()
                                 .add(Items.WOODEN_AXE)
