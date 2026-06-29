@@ -10,15 +10,14 @@ public record SectionTextured(
         int textColor,
         boolean collapsible,
         ConglomerateOfItems items
-) implements Section {
+) implements Section
+{
 
-    /** The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png when using this builder */
-    public static SectionTextured of(ResourceLocation id, Component title, int textColor, boolean collapsible, ConglomerateOfItems items) {
-        return of(id, title, textColor, items, collapsible);
-    }
-
-    /** As {@link #of(ResourceLocation, Component, int, ConglomerateOfItems)}, with collapsible opt-in. */
-    public static SectionTextured of(ResourceLocation id, Component title, int textColor, ConglomerateOfItems items, boolean collapsible) {
+    /**
+     * The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png when using this builder
+     */
+    public static SectionTextured of(ResourceLocation id, Component title, int textColor, boolean collapsible, ConglomerateOfItems items)
+    {
         return new SectionTextured(
                 id,
                 title,
@@ -27,5 +26,10 @@ public record SectionTextured(
                 collapsible,
                 items
         );
+    }
+
+    public static SectionTextured of(ResourceLocation id, Component title, int textColor, ConglomerateOfItems items)
+    {
+        return of(id, title, textColor, true, items);
     }
 }

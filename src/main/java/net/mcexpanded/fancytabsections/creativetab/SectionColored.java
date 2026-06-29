@@ -13,6 +13,6 @@ public record SectionColored(
 ) implements Section
 {
     public SectionColored(ResourceLocation id, Component title, int bannerColor, int textColor, ConglomerateOfItems items) {
-        this(id, title, bannerColor, textColor, false, items);
+        this(id, title, bannerColor, textColor, true, items);
     }
 }
