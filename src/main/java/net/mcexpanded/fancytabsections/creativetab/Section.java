@@ -10,5 +10,6 @@ public interface Section {
     ResourceLocation id();
     Component title();
     int textColor();
+    default boolean collapsible() { return false; }
     ConglomerateOfItems items();
 }

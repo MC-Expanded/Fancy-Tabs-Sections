@@ -8,5 +8,11 @@ public record SectionColored(
         Component title,
         int bannerColor,   // ARGB
         int textColor,
+        boolean collapsible,
         ConglomerateOfItems items
-) implements Section {}
+) implements Section
+{
+    public SectionColored(ResourceLocation id, Component title, int bannerColor, int textColor, ConglomerateOfItems items) {
+        this(id, title, bannerColor, textColor, true, items);
+    }
+}
