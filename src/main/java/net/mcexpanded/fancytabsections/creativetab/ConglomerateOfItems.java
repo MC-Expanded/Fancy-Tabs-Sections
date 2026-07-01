@@ -8,6 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ConglomerateOfItems
 {
@@ -56,7 +57,16 @@ public class ConglomerateOfItems
                 stacks.addAll(i.getEntries().stream().map(
                         holder -> holder.getDelegate().value().getDefaultInstance()).toList());
             }
+
+            if (o instanceof Supplier<?> supplier)
+            {
+                if (supplier.get() instanceof ItemStack is)
+                {
+                    stacks.add(is);
+                }
+            }
         }
+
         conglomerate.clear();
         cached = stacks;
         return stacks;
@@ -92,6 +102,12 @@ public class ConglomerateOfItems
     public ConglomerateOfItems add(DeferredRegister.Items deferredRegister)
     {
         conglomerate.add(deferredRegister);
+        return this;
+    }
+
+    public ConglomerateOfItems add(Supplier<ItemStack> itemStackSupplier)
+    {
+        conglomerate.add(itemStackSupplier);
         return this;
     }
 }

@@ -59,9 +59,6 @@ public abstract class CreativeModeInventoryScreenMixin
                 FancyTabSections.applyItems(selectedTab);
                 this.selectTab(selectedTab);
 
-                Minecraft.getInstance().getSoundManager().play(
-                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1.0F));
-
                 cir.setReturnValue(true);
                 return;
             }

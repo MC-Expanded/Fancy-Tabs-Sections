@@ -2,7 +2,10 @@ package net.mcexpanded.fancytabsections.creativetab;
 
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.Section;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -27,11 +30,18 @@ public class TabLayout
     }
 
     // Flips the collapsed state of a section and returns the new value
-    public static boolean toggle(ResourceLocation sectionId)
+    public static void toggle(ResourceLocation sectionId)
     {
         boolean next = !isCollapsed(sectionId);
+
+        if(!isCollapsed(sectionId))
+            Minecraft.getInstance().getSoundManager().play(
+                    SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1f, 1F));
+        else
+            Minecraft.getInstance().getSoundManager().play(
+                    SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
+
         COLLAPSED.put(sectionId, next);
-        return next;
     }
 
     public static void build()
