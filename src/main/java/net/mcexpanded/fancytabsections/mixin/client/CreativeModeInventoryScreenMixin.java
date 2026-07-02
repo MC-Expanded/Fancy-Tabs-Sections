@@ -33,6 +33,7 @@ public abstract class CreativeModeInventoryScreenMixin
     private void msgwoft$renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
     {
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
+        BannerRenderer.CURRENT_TAB = tab;
         if (FancyTabSections.SECTIONS_MAP.containsKey(tab))
         {
             BannerRenderer.render((CreativeModeInventoryScreen) (Object) this, guiGraphics,

@@ -29,6 +29,20 @@ public class TabLayout
         return COLLAPSED.getOrDefault(sectionId, false);
     }
 
+    // True if row is a banner row belonging to a section.
+    public static boolean isBannerRow(ResourceLocation tab, int row)
+    {
+        List<Section> sections = FancyTabSections.SECTIONS_MAP.get(tab);
+        if (sections == null) return false;
+
+        for (Section section : sections)
+        {
+            Integer sectionRow = SECTION_ROW.get(section.id());
+            if (sectionRow != null && sectionRow == row) return true;
+        }
+        return false;
+    }
+
     // Flips the collapsed state of a section and returns the new value
     public static void toggle(ResourceLocation sectionId)
     {
