@@ -13,6 +13,8 @@ public class BannerRenderer {
 
     public static int CURRENT_ROW = 0;
 
+    public static ResourceLocation CURRENT_TAB = null;
+
     private static final int ROW_HEIGHT    = 18;
     private static final int GRID_COLS     = 9;
     private static final int GRID_X_OFFSET = 10;
