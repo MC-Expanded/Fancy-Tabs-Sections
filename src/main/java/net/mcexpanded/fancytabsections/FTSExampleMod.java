@@ -32,7 +32,7 @@ public class FTSExampleMod
     public FTSExampleMod(IEventBus modEventBus)
     {
         //prevents example mod from running adding stuff
-        //if (true) return;
+        if (true) return;
 
         //register our creative mode tabs as usual, leaving them empty
         FTSExampleCreativeModeTabs.register(modEventBus);
