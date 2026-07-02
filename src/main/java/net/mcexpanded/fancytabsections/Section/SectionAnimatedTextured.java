@@ -53,5 +53,7 @@ public record SectionAnimatedTextured(
                 162, 18,
                 162, 18 * frames
         );
+
+        guiGraphics.drawString(font, title, topLeftX + 4, topLeftY + 5, textColor, textShadow);
     }
 }

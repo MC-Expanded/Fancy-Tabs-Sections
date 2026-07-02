@@ -42,8 +42,6 @@ public record SectionColored(
         //render flat color background
         guiGraphics.fill(topLeftX + 1, topLeftY + 1, topLeftX + 161, topLeftY + 17, bannerColor);
 
-
-
         guiGraphics.drawString(font, title, topLeftX + 4, topLeftY + 5, textColor, textShadow);
     }
 }

@@ -26,12 +26,10 @@ public class BannerRenderer
     private static final int VISIBLE_ROWS  = 5;
     private static final int BANNER_WIDTH  = GRID_COLS * ROW_HEIGHT - 4;
 
-    /**
-     * Toggle button textures. Expected to be 16x16 PNGs.
-     */
-    private static final int TOGGLE_SIZE = 16;
     private static final ResourceLocation EXPANDED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/expanded_button.png");
+    private static final ResourceLocation EXPANDED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/expanded_button_highlight.png");
     private static final ResourceLocation COLLAPSED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapsed_button.png");
+    private static final ResourceLocation COLLAPSED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapsed_button_highlight.png");
 
     public static void render(CreativeModeInventoryScreen screen, GuiGraphics guiGraphics, List<Section> sections, int mouseX, int mouseY)
     {
@@ -55,12 +53,12 @@ public class BannerRenderer
 
             if (section.collapsible())
             {
-                renderToggle(guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY);
+                renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY);
             }
         }
     }
 
-    private static void renderToggle(GuiGraphics graphics, Section section, int x, int y, int w, int h, int mouseX, int mouseY)
+    private static void renderToggle(CreativeModeInventoryScreen screen, GuiGraphics graphics, Section section, int x, int y, int w, int h, int mouseX, int mouseY)
     {
         // Right-most slot of the banner row.
         int tx1 = x + w + 3;
@@ -68,19 +66,16 @@ public class BannerRenderer
         int ty0 = y - 1;
         int ty1 = y + h;
 
-        boolean hovered = mouseX >= tx0 && mouseX < tx1 && mouseY >= ty0 && mouseY < ty1;
-        //todo enable this when I figure out how to stop the hover highlight on sections
-        if (hovered && !hovered)
-        {
-            graphics.fill(tx0, ty0, tx1, ty1, 0x33FFFFFF);
-        }
 
         // Centre the button texture within the slot (+1 on each axis to align with the grid cell).
-        int bx = tx0 + (ROW_HEIGHT - TOGGLE_SIZE) / 2 + 1;
-        int by = ty0 + (h - TOGGLE_SIZE) / 2 + 1;
+        int bx = tx0 + (ROW_HEIGHT - 16) / 2 + 1;
+        int by = ty0 + (h - 16) / 2 + 1;
 
-        ResourceLocation texture = TabLayout.isCollapsed(section.id()) ? COLLAPSED_BUTTON : EXPANDED_BUTTON;
-        graphics.blit(texture, bx, by, 0, 0, TOGGLE_SIZE, TOGGLE_SIZE, TOGGLE_SIZE, TOGGLE_SIZE);
+        //render button texture with highlight if hovered
+        if (mouseX >= tx0 && mouseX < tx1 && mouseY >= ty0 && mouseY < ty1 && screen.getMenu().getCarried().isEmpty())
+            graphics.blit(TabLayout.isCollapsed(section.id()) ? COLLAPSED_BUTTON_HIGHLIGHT : EXPANDED_BUTTON_HIGHLIGHT, bx, by, 0, 0, 16, 16, 16, 16);
+        else
+            graphics.blit(TabLayout.isCollapsed(section.id()) ? COLLAPSED_BUTTON : EXPANDED_BUTTON, bx, by, 0, 0, 16, 16, 16, 16);
     }
 
     /**
