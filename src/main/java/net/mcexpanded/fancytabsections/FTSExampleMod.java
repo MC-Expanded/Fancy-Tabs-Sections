@@ -40,10 +40,6 @@ public class FTSExampleMod
         //register our custom items
         FTSExampleModItems.register(modEventBus);
 
-        //create ItemStack to be added below
-        ItemStack exampleItemStack = Items.STONE_AXE.getDefaultInstance();
-        exampleItemStack.setDamageValue(20);
-
         /* This adds a solid coloured section to the creative mode tab registered under the ID "shiny_things" */
         FancyTabSections.addSection(rl("shiny_things"),
                 new SectionColored(
@@ -66,7 +62,12 @@ public class FTSExampleMod
                                 //adds an item
                                 .add(Items.GOLDEN_APPLE)
                                 //adds an ItemStack
-                                .add(exampleItemStack)
+                                .add(() ->
+                                {
+                                    ItemStack exampleItemStack = Items.STONE_AXE.getDefaultInstance();
+                                    exampleItemStack.setDamageValue(20);
+                                    return exampleItemStack;
+                                })
                                 //adds every item in the DeferredRegister
                                 .add(FTSExampleModItems.ITEMS)
                 )
