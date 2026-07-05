@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collection;
+
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin
 {
@@ -25,7 +27,7 @@ public abstract class CreativeModeInventoryScreenMixin
     private static CreativeModeTab selectedTab;
 
     @Shadow
-    protected abstract void selectTab(CreativeModeTab tab);
+    protected abstract void refreshCurrentTabContents(Collection<ItemStack> items);
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     private void renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
@@ -58,7 +60,7 @@ public abstract class CreativeModeInventoryScreenMixin
                 TabLayout.toggle(section.id());
                 TabLayout.build();
                 FancyTabSections.applyItems(selectedTab);
-                this.selectTab(selectedTab);
+                this.refreshCurrentTabContents(selectedTab.getDisplayItems());
 
                 cir.setReturnValue(true);
                 return;
