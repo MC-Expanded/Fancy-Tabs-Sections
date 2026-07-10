@@ -6,6 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * @since 3.0
+ */
 public record SectionColored(
         ResourceLocation id,
         Component title,

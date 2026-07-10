@@ -5,6 +5,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * @since 3.0
+ */
 public interface Section {
     ResourceLocation id();
     default boolean collapsible() { return false; }

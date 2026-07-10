@@ -5,8 +5,10 @@ import net.neoforged.fml.ModLoadingIssue;
 
 import java.util.List;
 
-@Deprecated
-//kept for v2 crash reporting
+/**
+ * @since 2.0
+ * @deprecated use {@link net.mcexpanded.fancytabsections.Section.Section}
+ */
 public interface Section
 {
     Object THROW_ON_LOAD = throwOnLoad();

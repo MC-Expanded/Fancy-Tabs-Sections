@@ -5,8 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.ModLoadingException;
 import net.neoforged.fml.ModLoadingIssue;
 
-@Deprecated
-//kept for v2 crash reporting
+/**
+ * @since 2.0
+ * @deprecated use {@link net.mcexpanded.fancytabsections.Section.SectionTextured}
+ */
 public record SectionTextured() implements Section
 {
     static
