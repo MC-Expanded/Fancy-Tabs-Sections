@@ -109,7 +109,7 @@ public class TabLayout
                 }
             }
 
-            FancyTabSections.ITEMS_MAP.put(rl, List.copyOf(result));
+            FancyTabSections.ITEMS_MAP.put(rl, result);
             FancyTabSections.SEARCH_MAP.put(rl, new LinkedHashSet<>(searchResults));
         });
     }
