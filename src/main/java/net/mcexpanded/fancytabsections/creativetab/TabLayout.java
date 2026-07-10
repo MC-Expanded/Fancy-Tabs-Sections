@@ -7,6 +7,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,12 +49,9 @@ public class TabLayout
     {
         boolean next = !isCollapsed(sectionId);
 
-        if(!isCollapsed(sectionId))
-            Minecraft.getInstance().getSoundManager().play(
-                    SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1f, 1F));
-        else
-            Minecraft.getInstance().getSoundManager().play(
-                    SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
+        //play sound with client only check for some weird mods who do weird things (computer craft)
+        if (FMLEnvironment.dist.isClient())
+            Client.playSound(!isCollapsed(sectionId));
 
         COLLAPSED.put(sectionId, next);
     }
@@ -114,5 +112,18 @@ public class TabLayout
             FancyTabSections.ITEMS_MAP.put(rl, List.copyOf(result));
             FancyTabSections.SEARCH_MAP.put(rl, new LinkedHashSet<>(searchResults));
         });
+    }
+
+    public static class Client
+    {
+        public static void playSound(boolean b)
+        {
+            if (b)
+                Minecraft.getInstance().getSoundManager().play(
+                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1f, 1F));
+            else
+                Minecraft.getInstance().getSoundManager().play(
+                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
+        }
     }
 }

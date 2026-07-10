@@ -30,7 +30,7 @@ public abstract class CreativeModeInventoryScreenMixin
     protected abstract void refreshCurrentTabContents(Collection<ItemStack> items);
 
     @Inject(method = "renderBg", at = @At("TAIL"))
-    private void renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
+    private void fts$renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
     {
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
         BannerRenderer.CURRENT_TAB = tab;
@@ -42,7 +42,7 @@ public abstract class CreativeModeInventoryScreenMixin
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void toggleSection(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
+    private void fts$toggleSection(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
     {
         if (button != 0) return;
 

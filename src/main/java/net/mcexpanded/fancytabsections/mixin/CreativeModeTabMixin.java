@@ -11,21 +11,16 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(CreativeModeTab.class)
 public class CreativeModeTabMixin
 {
-
     @WrapMethod(method = "buildContents")
-    private void buildContents(CreativeModeTab.ItemDisplayParameters parameters, Operation<Void> original)
+    private void fts$buildContents(CreativeModeTab.ItemDisplayParameters parameters, Operation<Void> original)
     {
         CreativeModeTab self = (CreativeModeTab) (Object) this;
 
         ResourceLocation rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(self);
 
         if (FancyTabSections.SECTIONS_MAP.containsKey(rl))
-        {
             FancyTabSections.applyItems(self);
-        }
         else
-        {
             original.call(parameters);
-        }
     }
 }
