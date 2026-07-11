@@ -39,7 +39,7 @@ public record SectionTextured(
     @Override
     public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
     {
-        guiGraphics.blit(texture, topLeftX, topLeftY, (int) (18 * System.currentTimeMillis()), 0, 162, 18, 162, 18, 162, 18);
+        guiGraphics.blit(texture, topLeftX, topLeftY, 162, 18, 0, 0, 162, 18, 162, 18);
 
         guiGraphics.drawString(font, title, topLeftX + 4, topLeftY + 5, textColor, textShadow);
     }
