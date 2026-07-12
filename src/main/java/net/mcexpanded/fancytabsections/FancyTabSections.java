@@ -4,6 +4,7 @@ import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Map;
 public class FancyTabSections
 {
     public static final String MOD_ID = "fancytabsections";
+    public static final Map<ResourceLocation, List<Section<?>>> REGISTERED_TABS = new HashMap<>();
 
     /**
      * An example of an implementation can be found on FTSExampleMod.
@@ -23,8 +25,6 @@ public class FancyTabSections
     public FancyTabSections()
     {
     }
-
-    public static final Map<ResourceLocation, List<Section<?>>> REGISTERED_TABS = new HashMap<>();
 
     /**
      * Adds a new Section to the given CreativeModeTab Identifier
@@ -37,14 +37,14 @@ public class FancyTabSections
     }
 
     /**
-     * Kept for backwards compatibility, use the new {@link Section} method instead
-     *
-     * @since 1.0
-     * @deprecated
+     * @return The list of sections registered, or an empty list if none are found for the requested CreativeModeTab
+     * @since 4.0
      */
-    public static void addSection(ResourceLocation tab, net.mcexpanded.fancytabsections.creativetab.Section section)
+    public static List<Section<?>> getSections(CreativeModeTab tab)
     {
-        REGISTERED_TABS.computeIfAbsent(tab, k -> new ArrayList<>()).add((Section<?>) section);
+        ResourceLocation rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
+
+        return FancyTabSections.REGISTERED_TABS.getOrDefault(rl, new ArrayList<>());
     }
 
     /**
@@ -61,14 +61,49 @@ public class FancyTabSections
         return null;
     }
 
-    /**
-     * @return The list of sections registered, or an empty list if none are found for the requested CreativeModeTab
-     * @since 4.0
-     */
-    public static List<Section<?>> getSections(CreativeModeTab tab)
-    {
-        ResourceLocation rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
 
-        return FancyTabSections.REGISTERED_TABS.getOrDefault(rl, new ArrayList<>());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Kept for backwards compatibility, use the new {@link Section} method instead
+     *
+     * @since 1.0
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
+    public static void addSection(ResourceLocation tab, net.mcexpanded.fancytabsections.creativetab.Section section)
+    {
+        REGISTERED_TABS.computeIfAbsent(tab, k -> new ArrayList<>()).add((Section<?>) section);
     }
+
+    /**
+     * Kept for backwards compatibility
+     *
+     * @since 1.0
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
+    public static final Map<ResourceLocation, List<net.mcexpanded.fancytabsections.creativetab.Section>> SECTIONS_MAP = new HashMap();
+    /**
+     * Kept for backwards compatibility
+     *
+     * @since 1.0
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true)
+    public static final Map<ResourceLocation, List<ItemStack>> ITEMS_MAP = new HashMap();
 }
