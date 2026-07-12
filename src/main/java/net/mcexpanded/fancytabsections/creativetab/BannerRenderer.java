@@ -1,5 +1,7 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import com.mojang.blaze3d.platform.cursor.CursorType;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.Section;
@@ -9,6 +11,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -54,6 +57,9 @@ public class BannerRenderer
             section.render(guiGraphics, font, topLeftX, topLeftY);
 
             boolean isHoveringAny = sections.stream().anyMatch(o -> BannerRenderer.isInToggle(screen, o, mouseX, mouseY));
+            if (isHoveringAny && screen.getMenu().getCarried() != null && screen.getMenu().getCarried().isEmpty())
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+
             section.renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY, isHoveringAny);
         }
     }

@@ -7,12 +7,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -36,7 +34,7 @@ public class FTSExampleMod
     public FTSExampleMod(IEventBus modEventBus)
     {
         //prevents example mod from running
-        if (true) return;
+        //if (true) return;
 
         //register our creative mode tabs as usual, leaving them empty
         FTSExampleCreativeModeTabs.register(modEventBus);
@@ -125,7 +123,7 @@ public class FTSExampleMod
         FancyTabSections.addSection(rl("shiny_things"),
                 new SectionColored(rl("pretty_things"))
                         //adds all items of this TagKey<Item>
-                        .addItemTag(ItemTags.FLOWERS)
+                        .addItemTag(BlockItemTags.FLOWERS.item())
                         //if tag has no items, none are added
                         .addItemTag(TagKey.create(Registries.ITEM, rl("unavailable_item_tag")))
         );
@@ -139,7 +137,7 @@ public class FTSExampleMod
         Supplier<CreativeModeTab> SHINY_THINGS = CREATIVE_MODE_TABS.register("shiny_things", () -> CreativeModeTab.builder()
                 .icon(() -> new ItemStack(Items.DIAMOND))
                 .title(Component.translatable("itemGroup.fts.shiny_things"))
-                .displayItems((params, output) ->
+                .displayItems((_, _) ->
                 {
                     // Intentionally empty as we add the items through FancyTabsSections#addSection
                 })
@@ -148,7 +146,7 @@ public class FTSExampleMod
         Supplier<CreativeModeTab> TOOLS = CREATIVE_MODE_TABS.register("dirty_tools", () -> CreativeModeTab.builder()
                 .icon(() -> new ItemStack(Items.WOODEN_PICKAXE))
                 .title(Component.translatable("itemGroup.fts.dirty_tools"))
-                .displayItems((params, output) ->
+                .displayItems((_, _) ->
                 {
                     // Intentionally empty as we add the items through FancyTabsSections#addSection
                 })
