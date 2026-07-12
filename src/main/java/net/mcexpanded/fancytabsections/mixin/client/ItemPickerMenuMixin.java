@@ -16,7 +16,7 @@ public abstract class ItemPickerMenuMixin
     protected abstract int getRowIndexForScroll(float f);
 
     @Inject(method = "scrollTo", at = @At("HEAD"))
-    private void scrollTo(float f, CallbackInfo ci)
+    private void fts$scrollTo(float f, CallbackInfo ci)
     {
         BannerRenderer.CURRENT_ROW = this.getRowIndexForScroll(f);
     }
