@@ -1,5 +1,6 @@
 package net.mcexpanded.fancytabsections.mixin.client;
 
+import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
 import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.world.inventory.Slot;
@@ -14,7 +15,7 @@ public abstract class CustomCreativeSlotMixin extends Slot
     public boolean isHighlightable()
     {
         int absoluteRow = BannerRenderer.CURRENT_ROW + this.index / 9;
-        if (BannerRenderer.CURRENT_TAB != null && TabLayout.isBannerRow(BannerRenderer.CURRENT_TAB, absoluteRow))
+        if (BannerRenderer.CURRENT_TAB != null && FTSInternal.isBannerRow(BannerRenderer.CURRENT_TAB, absoluteRow))
         {
             return false;
         }

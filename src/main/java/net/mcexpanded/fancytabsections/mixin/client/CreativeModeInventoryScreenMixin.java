@@ -1,10 +1,11 @@
 package net.mcexpanded.fancytabsections.mixin.client;
 
+import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
 import net.mcexpanded.fancytabsections.Section.Section;
-import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,11 +19,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
+import java.util.List;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin
 {
-
     @Shadow
     private static CreativeModeTab selectedTab;
 
@@ -33,33 +34,55 @@ public abstract class CreativeModeInventoryScreenMixin
     private void fts$renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
     {
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
-        BannerRenderer.CURRENT_TAB = tab;
-        if (FancyTabSections.SECTIONS_MAP.containsKey(tab))
+
+        if (BannerRenderer.CURRENT_TAB == null || !BannerRenderer.CURRENT_TAB.equals(tab))
+        {
+            BannerRenderer.CURRENT_TAB = tab;
+            FTSInternal.applyItems(selectedTab);
+            this.refreshCurrentTabContents(selectedTab.getDisplayItems());
+        }
+
+        if (FancyTabSections.REGISTERED_TABS.containsKey(tab))
         {
             BannerRenderer.render((CreativeModeInventoryScreen) (Object) this, guiGraphics,
-                    FancyTabSections.SECTIONS_MAP.get(tab), mouseX, mouseY);
+                    FancyTabSections.REGISTERED_TABS.get(tab), mouseX, mouseY);
         }
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void fts$toggleSection(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
+    private void fts$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
     {
         if (button != 0) return;
 
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
-        if (!FancyTabSections.SECTIONS_MAP.containsKey(tab)) return;
+        if (!FancyTabSections.REGISTERED_TABS.containsKey(tab)) return;
 
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
 
-        if(!self.getMenu().getCarried().isEmpty()) return;
+        if (!self.getMenu().getCarried().isEmpty()) return;
 
-        for (Section section : FancyTabSections.SECTIONS_MAP.get(tab))
+        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+        for (Section<?> section : sections)
         {
             if (BannerRenderer.isInToggle(self, section, mouseX, mouseY))
             {
-                TabLayout.toggle(section.id());
-                TabLayout.build();
-                FancyTabSections.applyItems(selectedTab);
+                //toggle all
+                if (Screen.hasShiftDown())
+                {
+                    if (FTSInternal.isCollapsed(section))
+                        sections.forEach(o -> FTSInternal.expand(o, o.equals(section)));
+                    else
+                        sections.forEach(o -> FTSInternal.collapse(o, o.equals(section)));
+                }
+                //toggle clicked
+                else
+                {
+                    FTSInternal.toggle(section);
+                }
+
+                //FTSInternal.toggle(section);
+                //refresh tab
+                FTSInternal.applyItems(selectedTab);
                 this.refreshCurrentTabContents(selectedTab.getDisplayItems());
 
                 cir.setReturnValue(true);

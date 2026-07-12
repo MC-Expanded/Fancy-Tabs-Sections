@@ -9,54 +9,62 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * @since 3.0
  */
-public record SectionAnimatedTextured(
-        ResourceLocation id,
-        Component title,
-        ResourceLocation texture,
-        int frames,
-        float frameTimeInMS,
-        int textColor,
-        boolean textShadow,
-        boolean collapsible,
-        ConglomerateOfItems items
-) implements Section
+public class SectionAnimatedTextured extends SectionTextured
 {
+    int frames = 0;
+    float frameTimeInMS = 200;
 
-    /**
-     * The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png when using this builder
-     */
-    public static SectionAnimatedTextured of(ResourceLocation id, Component title, int frames, float frameTimeInMS, int textColor, boolean textShadow, boolean collapsible, ConglomerateOfItems items)
+    public SectionAnimatedTextured(ResourceLocation id)
     {
-        return new SectionAnimatedTextured(
-                id,
-                title,
-                ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "textures/gui/fancy_tab_section/" + id.getPath() + ".png"),
-                frames,
-                frameTimeInMS,
-                textColor,
-                textShadow,
-                collapsible,
-                items
-        );
+        super(id);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
     {
-        int time = (int) ((int) System.currentTimeMillis() / frameTimeInMS);
-
-        int numberOfFrame = time % frames;
-
-        float vOffset = numberOfFrame * 18;
+        long currentTimeMs = System.currentTimeMillis();
+        int currentFrame = (int) ((currentTimeMs / (long)frameTimeInMS) % frames);
 
         guiGraphics.blit(
                 texture, topLeftX, topLeftY,
-                162, 18,
-                0, vOffset,
-                162, 18,
-                162, 18 * frames
+                horizontalSize, verticalSize,
+                0, currentFrame * verticalSize,
+                horizontalSize, verticalSize,
+                horizontalSize, verticalSize * frames
         );
 
-        guiGraphics.drawString(font, title, topLeftX + 4, topLeftY + 5, textColor, textShadow);
+        this.renderTitle(guiGraphics, font, topLeftX, topLeftY);
+    }
+
+    /**
+     * The texture must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png when using this builder
+     * @since 3.0
+     */
+    public static SectionAnimatedTextured of(ResourceLocation id, Component title, int frames, float frameTimeInMS, int textColor, boolean textShadow, boolean collapsible, ConglomerateOfItems items)
+    {
+        SectionAnimatedTextured sat = new SectionAnimatedTextured(id);
+
+        sat.setTitle(title);
+        sat.setTextColor(textColor);
+        sat.setTextShadow(textShadow);
+        sat.setCollapsible(collapsible);
+        sat.setItems(items);
+
+        sat.setFrames(frames);
+        sat.setFrameTimeInMS(frameTimeInMS);
+
+        return sat;
+    }
+
+    public SectionAnimatedTextured setFrames(int frames)
+    {
+        this.frames = frames;
+        return this;
+    }
+
+    public SectionAnimatedTextured setFrameTimeInMS(float frameTimeInMS)
+    {
+        this.frameTimeInMS = frameTimeInMS;
+        return this;
     }
 }

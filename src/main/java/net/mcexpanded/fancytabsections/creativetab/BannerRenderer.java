@@ -1,12 +1,15 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
@@ -17,21 +20,21 @@ public class BannerRenderer
 
     public static ResourceLocation CURRENT_TAB = null;
 
-    private static final int ROW_HEIGHT    = 18;
-    private static final int GRID_COLS     = 9;
-    private static final int GRID_X_OFFSET = 10;
-    private static final int GRID_Y_OFFSET = 17;
+    public static final int ROW_HEIGHT = 18;
+    public static final int GRID_COLS = 9;
+    public static final int GRID_X_OFFSET = 10;
+    public static final int GRID_Y_OFFSET = 17;
 
 
-    private static final int VISIBLE_ROWS  = 5;
-    private static final int BANNER_WIDTH  = GRID_COLS * ROW_HEIGHT - 4;
+    public static final int VISIBLE_ROWS = 5;
+    public static final int BANNER_WIDTH = GRID_COLS * ROW_HEIGHT - 4;
 
-    private static final ResourceLocation EXPANDED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/expanded_button.png");
-    private static final ResourceLocation EXPANDED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/expanded_button_highlight.png");
-    private static final ResourceLocation COLLAPSED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapsed_button.png");
-    private static final ResourceLocation COLLAPSED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapsed_button_highlight.png");
+    public static final ResourceLocation EXPANDED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button.png");
+    public static final ResourceLocation EXPANDED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button_highlight.png");
+    public static final ResourceLocation COLLAPSED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button.png");
+    public static final ResourceLocation COLLAPSED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button_highlight.png");
 
-    public static void render(CreativeModeInventoryScreen screen, GuiGraphics guiGraphics, List<Section> sections, int mouseX, int mouseY)
+    public static void render(CreativeModeInventoryScreen screen, GuiGraphics guiGraphics, List<Section<?>> sections, int mouseX, int mouseY)
     {
         int topLeftX = screen.getGuiLeft() + 8;
         int top = screen.getGuiTop() + 17;
@@ -39,10 +42,10 @@ public class BannerRenderer
 
         Font font = Minecraft.getInstance().font;
 
-        for (Section section : sections)
+        for (Section<?> section : sections)
         {
-            Integer sectionRow = TabLayout.SECTION_ROW.get(section.id());
-            if (sectionRow == null) continue;
+            int sectionRow = FTSInternal.getRowForSection(section);
+            if (sectionRow == -1) continue;
 
             int relativeRow = sectionRow - CURRENT_ROW;
             if (relativeRow < 0 || relativeRow >= 5) continue;
@@ -51,43 +54,22 @@ public class BannerRenderer
 
             section.render(guiGraphics, font, topLeftX, topLeftY);
 
-            if (section.collapsible())
-            {
-                renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY);
-            }
+            boolean isHoveringAny = sections.stream().anyMatch(o -> BannerRenderer.isInToggle(screen, o, mouseX, mouseY));
+            section.renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY, isHoveringAny);
         }
-    }
-
-    private static void renderToggle(CreativeModeInventoryScreen screen, GuiGraphics graphics, Section section, int x, int y, int w, int h, int mouseX, int mouseY)
-    {
-        // Right-most slot of the banner row.
-        int tx1 = x + w + 3;
-        int tx0 = tx1 - ROW_HEIGHT;
-        int ty0 = y - 1;
-        int ty1 = y + h;
-
-
-        // Centre the button texture within the slot (+1 on each axis to align with the grid cell).
-        int bx = tx0 + (ROW_HEIGHT - 16) / 2 + 1;
-        int by = ty0 + (h - 16) / 2 + 1;
-
-        //render button texture with highlight if hovered
-        if (mouseX >= tx0 && mouseX < tx1 && mouseY >= ty0 && mouseY < ty1 && screen.getMenu().getCarried().isEmpty())
-            graphics.blit(TabLayout.isCollapsed(section.id()) ? COLLAPSED_BUTTON_HIGHLIGHT : EXPANDED_BUTTON_HIGHLIGHT, bx, by, 0, 0, 16, 16, 16, 16);
-        else
-            graphics.blit(TabLayout.isCollapsed(section.id()) ? COLLAPSED_BUTTON : EXPANDED_BUTTON, bx, by, 0, 0, 16, 16, 16, 16);
     }
 
     /**
      * @return true if the given screen-space coordinate falls within the (visible) toggle control
-     * of a collapsible {@code section}.
+     * of a collapsible {@link Section}.
      */
+    @ApiStatus.Internal
     public static boolean isInToggle(CreativeModeInventoryScreen screen, Section section, double mouseX, double mouseY)
     {
         if (!section.collapsible()) return false;
 
-        Integer sectionRow = TabLayout.SECTION_ROW.get(section.id());
-        if (sectionRow == null) return false;
+        int sectionRow = FTSInternal.getRowForSection(section);
+        if (sectionRow == -1) return false;
 
         int relativeRow = sectionRow - CURRENT_ROW;
         if (relativeRow < 0 || relativeRow >= VISIBLE_ROWS) return false;

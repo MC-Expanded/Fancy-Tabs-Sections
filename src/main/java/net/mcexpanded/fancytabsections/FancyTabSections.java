@@ -1,23 +1,15 @@
 package net.mcexpanded.fancytabsections;
 
 import net.mcexpanded.fancytabsections.Section.Section;
-import net.mcexpanded.fancytabsections.creativetab.TabLayout;
-import net.mcexpanded.fancytabsections.mixin.CreativeModeTabAccessor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mod(FancyTabSections.MOD_ID)
 public class FancyTabSections
@@ -25,58 +17,46 @@ public class FancyTabSections
     public static final String MOD_ID = "fancytabsections";
 
     /**
-     * An example of an implementation can be found on FTSExampleMod
+     * An example of an implementation can be found on FTSExampleMod.
+     * Check the wiki on GitHub or directly contact me on discord for any questions that the wiki could not answer.
      */
-    public FancyTabSections(IEventBus modEventBus)
+    public FancyTabSections()
     {
-        //load all itemStacks on event to make sure every mod has already added their items
-        modEventBus.addListener(BuildCreativeModeTabContentsEvent.class, o -> TabLayout.build());
     }
 
-    public static final Map<ResourceLocation, List<Section>> SECTIONS_MAP = new HashMap<>();
-    public static final Map<ResourceLocation, List<ItemStack>> ITEMS_MAP = new HashMap<>();
-    /**
-     * Full (collapse-agnostic) search-tab contents per tab id.
-     */
-    public static final Map<ResourceLocation, Set<ItemStack>> SEARCH_MAP = new HashMap<>();
-
-    public static void applyItems(CreativeModeTab tab)
-    {
-        ResourceLocation rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
-        List<ItemStack> display = ITEMS_MAP.get(rl);
-        if (display == null) return;
-
-        ((CreativeModeTabAccessor) tab).setDisplayItems(display);
-
-        Set<ItemStack> search = SEARCH_MAP.get(rl);
-        if (search != null)
-        {
-            ((CreativeModeTabAccessor) tab).setDisplayItemsSearchTab(new LinkedHashSet<>(search));
-        }
-        else
-        {
-            ((CreativeModeTabAccessor) tab).setDisplayItemsSearchTab(
-                    display.stream()
-                            .filter(s -> !s.isEmpty())
-                            .collect(Collectors.toCollection(LinkedHashSet::new))
-            );
-        }
-    }
+    public static final Map<ResourceLocation, List<Section<?>>> REGISTERED_TABS = new HashMap<>();
 
     /**
-     * Adds a Fancy Tab Section to the given CreativeModeTab Identifier
+     * Adds a new Section to the given CreativeModeTab Identifier
+     * @since 1.0
      */
     public static void addSection(ResourceLocation tab, Section section)
     {
-        if (SECTIONS_MAP.containsKey(tab))
-        {
-            List<Section> list = new ArrayList<>(SECTIONS_MAP.get(tab));
-            list.add(section);
-            SECTIONS_MAP.put(tab, List.copyOf(list));
-        }
-        else
-        {
-            SECTIONS_MAP.put(tab, List.of(section));
-        }
+        REGISTERED_TABS.computeIfAbsent(tab, k -> new ArrayList<>()).add(section);
+    }
+
+    /**
+     * @return A registered section, or null if none were found
+     * @since 4.0
+     */
+    public static Section<?> getSection(ResourceLocation id)
+    {
+        for (List<Section<?>> entry : REGISTERED_TABS.values())
+            if (entry != null)
+                for (Section<?> section : entry)
+                    if (section.id().equals(id))
+                        return section;
+        return null;
+    }
+
+    /**
+     * @return The list of sections registered, or an empty list if none are found for the requested CreativeModeTab
+     * @since 4.0
+     */
+    public static List<Section<?>> getSections(CreativeModeTab tab)
+    {
+        ResourceLocation rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
+
+        return FancyTabSections.REGISTERED_TABS.getOrDefault(rl, new ArrayList<>());
     }
 }
