@@ -1,5 +1,7 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -13,7 +15,7 @@ import java.util.List;
  * @deprecated use {@link net.mcexpanded.fancytabsections.Section.SectionTextured}
  */
 @Deprecated(forRemoval = true, since = "4.0")
-public class SectionTextured
+public class SectionTextured implements Section
 {
     private final net.mcexpanded.fancytabsections.Section.SectionTextured delegated;
 
@@ -97,6 +99,36 @@ public class SectionTextured
     public String toString()
     {
         return delegated.toString();
+    }
+
+    /**
+     * @since 1.0
+     * @deprecated use {@link net.mcexpanded.fancytabsections.Section.SectionTextured}
+     */
+    @Override
+    public ResourceLocation id()
+    {
+        return delegated.id();
+    }
+
+    /**
+     * @since 1.0
+     * @deprecated use {@link net.mcexpanded.fancytabsections.Section.SectionTextured}
+     */
+    @Override
+    public ConglomerateOfItems items()
+    {
+        return delegated.items();
+    }
+
+    /**
+     * @since 1.0
+     * @deprecated use {@link net.mcexpanded.fancytabsections.Section.SectionTextured}
+     */
+    @Override
+    public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
+    {
+        delegated.render(guiGraphics, font, topLeftX, topLeftY);
     }
 }
 

@@ -28,11 +28,23 @@ public class FancyTabSections
 
     /**
      * Adds a new Section to the given CreativeModeTab Identifier
-     * @since 1.0
+     *
+     * @since 4.0
      */
     public static void addSection(ResourceLocation tab, Section section)
     {
         REGISTERED_TABS.computeIfAbsent(tab, k -> new ArrayList<>()).add(section);
+    }
+
+    /**
+     * Kept for backwards compatibility, use the new {@link Section} method instead
+     *
+     * @since 1.0
+     * @deprecated
+     */
+    public static void addSection(ResourceLocation tab, net.mcexpanded.fancytabsections.creativetab.Section section)
+    {
+        REGISTERED_TABS.computeIfAbsent(tab, k -> new ArrayList<>()).add((Section<?>) section);
     }
 
     /**
