@@ -1,14 +1,18 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.Item;
 
-import java.util.List;
-
-public interface Section {
+/**
+ * @since 1.0
+ * @deprecated use {@link net.mcexpanded.fancytabsections.Section.Section}
+ */
+public interface Section extends net.mcexpanded.fancytabsections.Section.Section<Section>
+{
     Identifier id();
-    Component title();
-    int textColor();
+
     ConglomerateOfItems items();
+
+    void render(GuiGraphicsExtractor guiGraphics, Font font, int topLeftX, int topLeftY);
 }

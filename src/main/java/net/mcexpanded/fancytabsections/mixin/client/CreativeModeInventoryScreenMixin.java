@@ -1,32 +1,95 @@
 package net.mcexpanded.fancytabsections.mixin.client;
 
+import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
+import net.mcexpanded.fancytabsections.Section.Section;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Collection;
+import java.util.List;
 
 @Mixin(CreativeModeInventoryScreen.class)
-public class CreativeModeInventoryScreenMixin
+public abstract class CreativeModeInventoryScreenMixin
 {
-
     @Shadow
     private static CreativeModeTab selectedTab;
 
+    @Shadow
+    protected abstract void refreshCurrentTabContents(Collection<ItemStack> items);
+
     @Inject(method = "extractBackground", at = @At("TAIL"))
-    private void msgwoft$renderBanners(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta, CallbackInfo ci)
+    private void fts$renderBanners(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci)
     {
         Identifier tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
-        if (FancyTabSections.SECTIONS_MAP.containsKey(tab))
+
+        if (BannerRenderer.CURRENT_TAB == null || !BannerRenderer.CURRENT_TAB.equals(tab))
         {
-            BannerRenderer.render((CreativeModeInventoryScreen) (Object) this, graphics, FancyTabSections.SECTIONS_MAP.get(tab));
+            BannerRenderer.CURRENT_TAB = tab;
+            FTSInternal.applyItems(selectedTab);
+            this.refreshCurrentTabContents(selectedTab.getDisplayItems());
+        }
+
+        if (FancyTabSections.REGISTERED_TABS.containsKey(tab))
+        {
+            BannerRenderer.render((CreativeModeInventoryScreen) (Object) this, graphics,
+                    FancyTabSections.REGISTERED_TABS.get(tab), mouseX, mouseY);
+        }
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void fts$mouseClicked(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (event.isRight()) return;
+
+        Identifier tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
+        if (!FancyTabSections.REGISTERED_TABS.containsKey(tab)) return;
+
+        CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
+
+        if (!self.getMenu().getCarried().isEmpty()) return;
+
+        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+        for (Section<?> section : sections)
+        {
+            if (BannerRenderer.isInToggle(self, section, event.x(), event.y()))
+            {
+                //toggle all
+                if (Minecraft.getInstance().hasShiftDown())
+                {
+                    if (FTSInternal.isCollapsed(section))
+                        sections.forEach(o -> FTSInternal.expand(o, o.equals(section)));
+                    else
+                        sections.forEach(o -> FTSInternal.collapse(o, o.equals(section)));
+                }
+                //toggle clicked
+                else
+                {
+                    FTSInternal.toggle(section);
+                }
+
+                //FTSInternal.toggle(section);
+                //refresh tab
+                FTSInternal.applyItems(selectedTab);
+                this.refreshCurrentTabContents(selectedTab.getDisplayItems());
+
+                cir.setReturnValue(true);
+                return;
+            }
         }
     }
 }

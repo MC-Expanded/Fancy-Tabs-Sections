@@ -1,8 +1,8 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -11,24 +11,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * Stores several objects which represent ItemStacks in some way
+ *
+ * @since 2.0
+ */
 public class ConglomerateOfItems
 {
     public final List<Object> conglomerate = new ArrayList<>();
-    List<ItemStack> cached = null;
+    private final List<ItemStack> stacks = new ArrayList<>();
 
     public static ConglomerateOfItems create()
     {
         return new ConglomerateOfItems();
     }
 
-    /** Converts the list of added objects to ItemStacks and caches it */
-    public List<ItemStack> toStacks()
+    /**
+     * @since 4.0
+     */
+    public List<ItemStack> getStacks()
     {
-        if (cached != null) return cached;
-        List<ItemStack> stacks = new ArrayList<>();
+        return stacks;
+    }
+
+    /**
+     * @since 4.0
+     */
+    public void resolveStacks(RegistryAccess registryAccess)
+    {
+        stacks.clear();
 
         for (Object o : conglomerate)
         {
+            if (o instanceof ItemStack i)
+            {
+                stacks.add(i);
+                continue;
+            }
+
             if (o instanceof Item i)
             {
                 stacks.add(i.getDefaultInstance());
@@ -38,12 +58,6 @@ public class ConglomerateOfItems
             if (o instanceof DeferredItem<?> i)
             {
                 stacks.add(i.toStack());
-                continue;
-            }
-
-            if (o instanceof Supplier<?> i)
-            {
-                stacks.add((ItemStack) i.get());
                 continue;
             }
 
@@ -58,42 +72,133 @@ public class ConglomerateOfItems
                 stacks.addAll(i.getEntries().stream().map(
                         holder -> holder.getDelegate().value().getDefaultInstance()).toList());
             }
+
+            if (o instanceof Supplier<?> supplier)
+            {
+                if (supplier.get() instanceof ItemStack is)
+                {
+                    stacks.add(is);
+                }
+            }
+
+            if (o instanceof List<?> list)
+            {
+                if (list.stream().allMatch(ItemStack.class::isInstance))
+                {
+                    @SuppressWarnings("unchecked")
+                    List<ItemStack> itemStacks = (List<ItemStack>) list;
+                    stacks.addAll(itemStacks);
+                }
+            }
+
+            if (o instanceof RegistryDependentEntry entry)
+            {
+                stacks.addAll(entry.add(registryAccess));
+            }
         }
-        conglomerate.clear();
-        cached = stacks;
-        return stacks;
     }
 
-    /** Add an Item to the conglomerate */
+    /**
+     * Add an Item to the conglomerate.
+     * The item is later resolved into an ItemStack using {@link Item#getDefaultInstance()}}
+     *
+     * @since 2.0
+     */
     public ConglomerateOfItems add(Item item)
     {
         conglomerate.add(item);
         return this;
     }
 
-    /** Add an ItemStack to the conglomerate */
-    public ConglomerateOfItems add(Supplier<ItemStack> stack)
+    /**
+     * Add an ItemStack to the conglomerate.
+     * The ItemStack is not resolved and is directly passed.
+     *
+     * @since 2.0
+     */
+    public ConglomerateOfItems add(ItemStack stack)
     {
         conglomerate.add(stack);
         return this;
     }
 
-    /** Add a DeferredItem to the conglomerate. You may call this even before registration happens */
+    /**
+     * Add a {@link DeferredItem} to the conglomerate.
+     * You may call this even before registration happens.
+     * The DeferredItem is later resolved into an ItemStack using {@link DeferredItem#toStack()}
+     *
+     * @since 2.0
+     */
     public ConglomerateOfItems add(DeferredItem<Item> deferredItem)
     {
         conglomerate.add(deferredItem);
         return this;
     }
 
+    /**
+     * Add a {@link ItemLike} to the conglomerate.
+     * The ItemLike is later resolved into an ItemStack using {@link ItemLike#asItem()} and {@link Item#getDefaultInstance()}
+     *
+     * @since 2.0
+     */
     public ConglomerateOfItems add(ItemLike itemLike)
     {
         conglomerate.add(itemLike);
         return this;
     }
 
+    /**
+     * Add a {@link DeferredRegister.Items} to the conglomerate.
+     * The DeferredRegister is later resolved, adding every entry as an Itemstack using {@link Item#getDefaultInstance()}
+     *
+     * @since 2.0
+     */
     public ConglomerateOfItems add(DeferredRegister.Items deferredRegister)
     {
         conglomerate.add(deferredRegister);
         return this;
+    }
+
+    /**
+     * Add a Supplier of ItemStack to the conglomerate.
+     * The Supplier is later resolved, adding the ItemStack
+     *
+     * @since 2.0
+     */
+    public ConglomerateOfItems add(Supplier<ItemStack> itemStackSupplier)
+    {
+        conglomerate.add(itemStackSupplier);
+        return this;
+    }
+
+    /**
+     * Add a List of ItemStacks to the conglomerate.
+     * @since 4.0
+     */
+    public ConglomerateOfItems add(List<ItemStack> listofStacks)
+    {
+        conglomerate.add(listofStacks);
+        return this;
+    }
+
+    /**
+     * Add a RegistryDependentEntry to the conglomerate.
+     * This entry has {@link RegistryAccess}
+     * The entry is later resolved, adding all the ItemStacks returned
+     *
+     * @since 4.0
+     */
+    public ConglomerateOfItems add(RegistryDependentEntry entry)
+    {
+        conglomerate.add(entry);
+        return this;
+    }
+
+    /**
+     * @since 4.0
+     */
+    public interface RegistryDependentEntry
+    {
+        List<ItemStack> add(RegistryAccess registryAccess);
     }
 }

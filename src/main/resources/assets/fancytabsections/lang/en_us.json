@@ -1,8 +1,9 @@
 {
-  "itemGroup.fancytabsections.apples": "Apples",
-  "itemGroup.fancytabsections.even_more_shiny": "Even More Shiny Things!",
   "itemGroup.fts.shiny_things": "Shiny Things",
   "itemGroup.fts.dirty_tools": "Dirty Tools",
-  "itemGroup.livestreammod.very_dirty_tools": "Very Dirty Tools",
-  "itemGroup.livestreammod.decently_dirty_tools": "Decently Dirty Tools"
+
+  "section.fancytabsections.shiny_things": "Shiny Things",
+  "section.fancytabsections.pretty_things": "Pretty Things!",
+  "section.fancytabsections.very_dirty_tools": "Very Dirty Tools",
+  "section.fancytabsections.decently_dirty_tools": "Decently Dirty Tools"
 }
