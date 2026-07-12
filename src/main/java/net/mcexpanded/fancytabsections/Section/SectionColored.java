@@ -66,7 +66,7 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
             boolean collapsible,
             ConglomerateOfItems items)
     {
-        this(id, title, bannerColor, textColor, 0x00ffffff, textShadow, collapsible, 162, 18, items);
+        this(id, title, bannerColor, textColor, 0x00000000, textShadow, collapsible, 162, 18, items);
     }
 
     /**
