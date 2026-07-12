@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,16 +124,14 @@ public class FTSExampleMod
                         })
         );
 
-
-        /* This adds a third section to "shiny_things". The trailing `true` makes it collapsible:
-           a +/- toggle appears in the right-most slot of the banner row, and clicking it
-           hides/shows this section's items. */
+        // This adds a new section to "shiny_things" consisting of a (hopefully) populated item tag, and one without any items
         FancyTabSections.addSection(rl("shiny_things"),
-                new SectionColored(rl("even_more_shiny_things"))
+                new SectionColored(rl("pretty_things"))
                         //adds all items of this TagKey<Item>
-                        .addItemTag(ItemTags.EQUIPPABLE_ENCHANTABLE)
+                        .addItemTag(ItemTags.FLOWERS)
+                        //if tag has no items, none are added
+                        .addItemTag(TagKey.create(Registries.ITEM, rl("unavailable_item_tag")))
         );
-
     }
 
     public interface FTSExampleCreativeModeTabs

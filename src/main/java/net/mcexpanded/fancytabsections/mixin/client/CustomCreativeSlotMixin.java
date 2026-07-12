@@ -2,7 +2,6 @@ package net.mcexpanded.fancytabsections.mixin.client;
 
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
-import net.mcexpanded.fancytabsections.creativetab.TabLayout;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 
