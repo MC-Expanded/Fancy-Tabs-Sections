@@ -8,11 +8,11 @@ issueTrackerURL="https://github.com/MC-Expanded/Fancy-Tabs-Neo/issues" #optional
 
 [[mods]] #mandatory
 modId="fancytabsections"
-version="1.0-FORGE-1.20.1"
+version="4.0-FORGE-1.20.1"
 displayName="Fancy Tab Sections"
 displayURL="http://curseforge.com/minecraft/mc-mods/fancy-tab-sections"
 logoFile = "icon.png"
-mod_authors="wdiscute, Kaupenjoe, nanoattack"
+mod_authors="wdiscute, Kaupenjoe, nanoattack, NicciCage"
 description='''
 A library to allow for easy control of Sections inside Creative Mode Tabs
 '''
@@ -30,6 +30,6 @@ side="BOTH"
 [[dependencies.fancytabsections]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.20.1,1.21)"
+versionRange="[1.20.1]"
 ordering="AFTER"
 side="BOTH"
