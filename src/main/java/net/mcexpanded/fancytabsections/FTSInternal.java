@@ -84,19 +84,25 @@ public class FTSInternal
     public static void tagsUpdatedEvent(TagsUpdatedEvent event)
     {
         registryAccess = event.getRegistries();
+        if(!hasDataComponentsBound) return;
+        refreshAllItems(registryAccess);
         BannerRenderer.CURRENT_TAB = null;
     }
 
     static RegistryAccess registryAccess;
+    /**
+     * Only present in 26.2+, as the order these events are triggered changes only on client.
+     */
+    static boolean hasDataComponentsBound = false;
 
     /**
      * Used as a work-around for refreshing section items on world join, and /reload
-     *
      * @since 4.0
      */
     @SubscribeEvent
     public static void componentsBoundEvent(DefaultDataComponentsBoundEvent event)
     {
+        hasDataComponentsBound = true;
         if(registryAccess == null) return;
         refreshAllItems(registryAccess);
         BannerRenderer.CURRENT_TAB = null;
