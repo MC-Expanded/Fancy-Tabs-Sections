@@ -52,6 +52,14 @@ public abstract class CreativeModeInventoryScreenMixin
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void fts$slotClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
     {
+
+    }
+
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void fts$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
+    {
+        if (button != 0) return;
+
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
 
         //only run for tabs registered in FTS
@@ -63,18 +71,8 @@ public abstract class CreativeModeInventoryScreenMixin
             {
                 self.getMenu().setCarried(ItemStack.EMPTY);
                 cir.cancel();
+                return;
             }
-    }
-
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void fts$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
-    {
-        if (button != 0) return;
-
-        ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
-        if (!FancyTabSections.REGISTERED_TABS.containsKey(tab)) return;
-
-        CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
 
         if (!self.getMenu().getCarried().isEmpty()) return;
 
