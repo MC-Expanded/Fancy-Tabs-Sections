@@ -4,15 +4,17 @@ import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
-@Mod(FancyTabSections.MOD_ID)
 public class FancyTabSections
 {
     public static final String MOD_ID = "fancytabsections";
@@ -45,6 +47,48 @@ public class FancyTabSections
         Identifier rl = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(tab);
 
         return FancyTabSections.REGISTERED_TABS.getOrDefault(rl, new ArrayList<>());
+    }
+
+    /**
+     * Registers a CreativeModeTab for with the given Identifier.
+     * The title of the CreativeModeTab will be set as `itemGroup.[namespace].[path]`
+     *
+     * @param Identifier The Identifier for the Tab
+     * @param displayItem The ItemStack to be displayed on the "icon" of the tab
+     *
+     * @since 5.0
+     */
+    public static Supplier<CreativeModeTab> registerCreativeModeTab(IEventBus eventBus, Identifier Identifier, Supplier<ItemStack> displayItem)
+    {
+        return FTSInternal.registerTab(eventBus, Identifier, displayItem);
+    }
+
+    /**
+     * Registers a CreativeModeTab for with the given Identifier.
+     * The title of the CreativeModeTab will be set as `itemGroup.[namespace].[path]`
+     *
+     * @param Identifier The Identifier for the Tab
+     * @param displayItem The Item to be displayed on the "icon" of the tab
+     *
+     * @since 5.0
+     */
+    public static Supplier<CreativeModeTab> registerCreativeModeTab(IEventBus eventBus, Identifier Identifier, Item displayItem)
+    {
+        return FTSInternal.registerTab(eventBus, Identifier, displayItem::getDefaultInstance);
+    }
+
+    /**
+     * Registers a CreativeModeTab for with the given Identifier.
+     * The title of the CreativeModeTab will be set as `itemGroup.[namespace].[path]`
+     *
+     * @param Identifier The Identifier for the Tab
+     * @param displayItem The Item to be displayed on the "icon" of the tab
+     *
+     * @since 5.0
+     */
+    public static Supplier<CreativeModeTab> registerCreativeModeTab(IEventBus eventBus, Identifier Identifier, DeferredItem<Item> displayItem)
+    {
+        return FTSInternal.registerTab(eventBus, Identifier, displayItem::toStack);
     }
 
     /**
