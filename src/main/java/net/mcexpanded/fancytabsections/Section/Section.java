@@ -6,7 +6,6 @@ import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.Registries;
@@ -117,18 +116,18 @@ public interface Section<T extends Section<T>>
      *
      * @since 4.0
      */
-    default void renderToggle(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics, Section<?> section, int x, int y, int w, int h, int mouseX, int mouseY, boolean isHoveringAny)
+    default void renderToggle(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics, Section<?> section, int x, int y, int w, int bannerWidth, int mouseX, int mouseY, boolean isHoveringAny)
     {
         if (!section.collapsible()) return;
         // Top Left of Right-most slot of the banner row.
         int tx1 = x + w + 3;
         int tx0 = tx1 - BannerRenderer.ROW_HEIGHT;
         int ty0 = y - 1;
-        int ty1 = y + h;
+        int ty1 = y + bannerWidth;
 
         // Centre the button texture within the slot (+1 on each axis to align with the grid cell).
         int bx = tx0 + (BannerRenderer.ROW_HEIGHT - 16) / 2 + 1;
-        int by = ty0 + (h - 16) / 2 + 1;
+        int by = ty0 + (bannerWidth - 16) / 2 + 1;
 
         //render button texture with highlight if hovered
         if (((isHoveringAny && Minecraft.getInstance().hasShiftDown()) || mouseX >= tx0 && mouseX < tx1 && mouseY >= ty0 && mouseY < ty1) && screen.getMenu().getCarried().isEmpty())
