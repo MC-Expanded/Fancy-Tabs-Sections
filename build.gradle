@@ -32,9 +32,12 @@ java {
 }
 
 repositories {
+    mavenLocal()
 }
 
 dependencies {
+    //wdUtils
+    jarJar(implementation("com.wdiscute:wdUtils:1.2-NEOFORGE-26.1.2"))
 }
 
 configurations {
