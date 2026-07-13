@@ -13,6 +13,8 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+    mavenLocal()
+
     //modrinth
     maven {
         url = "https://api.modrinth.com/maven"
@@ -20,6 +22,10 @@ repositories {
 }
 
 dependencies {
+
+    //wd's utils
+    jarJar(modImplementation("com.wdiscute:wdUtils:1.2-FORGE-1.20.1"))
+
     //mixin
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation("io.github.llamalad7:mixinextras-forge:[0.5.0,)")

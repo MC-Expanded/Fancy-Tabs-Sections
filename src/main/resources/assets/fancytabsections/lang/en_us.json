@@ -1,6 +1,6 @@
 {
-  "itemGroup.fts.shiny_things": "Shiny Things",
-  "itemGroup.fts.dirty_tools": "Dirty Tools",
+  "itemGroup.fancytabsections.fancy_things": "Shiny Things",
+  "itemGroup.fancytabsections.dirty_tools": "Dirty Tools",
 
   "section.fancytabsections.shiny_things": "Shiny Things",
   "section.fancytabsections.even_more_shiny_things": "Even More Shiny Things!",

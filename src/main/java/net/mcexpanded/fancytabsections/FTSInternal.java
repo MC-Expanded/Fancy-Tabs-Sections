@@ -6,17 +6,28 @@ import net.mcexpanded.fancytabsections.mixin.CreativeModeTabAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.registries.DeferredRegister;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -27,6 +38,7 @@ import java.util.stream.Collectors;
  */
 @Mod.EventBusSubscriber(modid = FancyTabSections.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 @ApiStatus.Internal
+@Mod(FancyTabSections.MOD_ID)
 public class FTSInternal
 {
     /**
@@ -219,6 +231,27 @@ public class FTSInternal
                 Minecraft.getInstance().getSoundManager().play(
                         SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
         }
+    }
+
+    public FTSInternal()
+    {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        new FTSExampleMod(modEventBus);
+    }
+
+    public static Supplier<CreativeModeTab> registerTab(IEventBus bus, ResourceLocation rl, Supplier<ItemStack> sup)
+    {
+        DeferredRegister<CreativeModeTab> deferredRegister =
+                DeferredRegister.create(Registries.CREATIVE_MODE_TAB, rl.getNamespace());
+
+        Supplier<CreativeModeTab> tab = deferredRegister.register(rl.getPath(), () -> CreativeModeTab.builder()
+                .icon(sup)
+                .title(Component.translatable("itemGroup." + rl.getNamespace() + "." + rl.getPath()))
+                .displayItems((params, output) -> output.accept(Items.BARRIER))
+                .build());
+
+        deferredRegister.register(bus);
+        return tab;
     }
 }
 
