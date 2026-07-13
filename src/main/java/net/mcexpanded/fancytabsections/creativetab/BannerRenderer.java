@@ -1,5 +1,6 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.Section;
@@ -54,6 +55,9 @@ public class BannerRenderer
             section.render(guiGraphics, font, topLeftX, topLeftY);
 
             boolean isHoveringAny = sections.stream().anyMatch(o -> BannerRenderer.isInToggle(screen, o, mouseX, mouseY));
+            if(isHoveringAny)
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+
             section.renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, BANNER_WIDTH, 18, mouseX, mouseY, isHoveringAny);
         }
     }
