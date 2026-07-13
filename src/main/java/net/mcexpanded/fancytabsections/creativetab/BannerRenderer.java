@@ -91,9 +91,9 @@ public class BannerRenderer
     @ApiStatus.Internal
     public static boolean isInBanner(CreativeModeInventoryScreen screen, double mouseX, double mouseY)
     {
-        List<Section<?>> orDefault = FancyTabSections.REGISTERED_TABS.getOrDefault(BannerRenderer.CURRENT_TAB, new ArrayList<>());
+        List<Section<?>> list = FancyTabSections.REGISTERED_TABS.getOrDefault(BannerRenderer.CURRENT_TAB, List.of());
 
-        for (Section<?> section : orDefault)
+        for (Section<?> section : list)
         {
             int sectionRow = FTSInternal.getRowForSection(section);
             if (sectionRow == -1) continue;
