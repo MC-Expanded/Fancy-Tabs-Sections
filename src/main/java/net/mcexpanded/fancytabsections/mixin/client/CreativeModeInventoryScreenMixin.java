@@ -2,11 +2,10 @@ package net.mcexpanded.fancytabsections.mixin.client;
 
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
-import net.mcexpanded.fancytabsections.Section.Section;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
+import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -82,7 +81,6 @@ public abstract class CreativeModeInventoryScreenMixin
                     FTSInternal.toggle(section);
                 }
 
-                //FTSInternal.toggle(section);
                 //refresh tab
                 FTSInternal.applyItems(selectedTab);
                 this.refreshCurrentTabContents(selectedTab.getDisplayItems());

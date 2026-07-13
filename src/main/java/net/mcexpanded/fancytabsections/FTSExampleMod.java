@@ -29,6 +29,7 @@ public class FTSExampleMod
 {
     /**
      * Helper method for creation of Identifiers under the fancytabsections namespace
+     *
      * @return A Identifier in the format fancytabsections:[path]
      */
     public static Identifier rl(String path)
@@ -45,9 +46,9 @@ public class FTSExampleMod
         if (FMLLoader.getCurrent().isProduction()) return;
 
         //register a CreativeModeTab, either using FancyTabSection's helper, or doing our own setup as usual
-        FancyTabSections.registerCreativeModeTab(modEventBus, rl("fancy_things"), Items.DIAMOND);
-        //register a second CreativeModeTab
         FancyTabSections.registerCreativeModeTab(modEventBus, rl("dirty_tools"), Items.STONE_AXE);
+        //register a second CreativeModeTab
+        FancyTabSections.registerCreativeModeTab(modEventBus, rl("fancy_things"), Items.DIAMOND);
 
         //register our custom items
         FTSExampleModItems.register(modEventBus);
@@ -101,7 +102,7 @@ public class FTSExampleMod
                         .add(Items.STONE_HOE)
         );
 
-        //Add an animated banner section to our second creative mode tab "shiny_things"
+        //Add an animated banner section to our second creative mode tab "fancy_things"
         FancyTabSections.addSection(rl("fancy_things"),
                 //when using the default texture location, it must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png
                 new SectionAnimatedTextured(rl("shiny_things"))
@@ -109,6 +110,7 @@ public class FTSExampleMod
                         .setFrames(18)
                         //defines the time each frame will stay on the screen for, in MS
                         .setFrameTimeInMS(200)
+                        .setCollapsible(false)
 
                         //adds an item
                         .add(Items.ENCHANTED_GOLDEN_APPLE)
@@ -129,13 +131,57 @@ public class FTSExampleMod
                         })
         );
 
-        // This adds a new section to "shiny_things" consisting of a (hopefully) populated item tag, and one without any items
+        // This adds a new section to "fancy_things" consisting of a (hopefully) populated item tag, and one without any items
         FancyTabSections.addSection(rl("fancy_things"),
                 new SectionColored(rl("pretty_things"))
+                        //makes the title centered on the banner
+                        .setCentered(true)
                         //adds all items of this TagKey<Item>
                         .addItemTag(ItemTags.FLOWERS)
                         //if tag has no items, none are added
                         .addItemTag(TagKey.create(Registries.ITEM, rl("unavailable_item_tag")))
+        );
+
+        // This adds a third section to "fancy_things" consisting of a bunch of tags
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("secret_things"))
+                        .setTextOutline(0xff456456)
+                        .addItemTag(ItemTags.LOGS)
+                        .addItemTag(ItemTags.PLANKS)
+                        .addItemTag(ItemTags.LEAVES)
+                        .addItemTag(ItemTags.WOODEN_SLABS)
+                        .addItemTag(ItemTags.WOODEN_STAIRS)
+                        .addItemTag(ItemTags.WOODEN_FENCES)
+                        .addItemTag(ItemTags.FENCE_GATES)
+                        .addItemTag(ItemTags.WOODEN_DOORS)
+                        .addItemTag(ItemTags.WOODEN_TRAPDOORS)
+                        .addItemTag(ItemTags.WOODEN_PRESSURE_PLATES)
+                        .addItemTag(ItemTags.WOODEN_BUTTONS)
+        );
+
+        // This adds a forth section to "fancy_things"
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("hotbar"))
+                        .setBannerColor(0xffbf6a6a)
+                        .add(Items.NETHERITE_SWORD)
+                        .add(Items.NETHERITE_PICKAXE)
+                        .add(Items.NETHERITE_SHOVEL)
+                        .add(Items.NETHERITE_AXE)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(Items.AIR)
+                        .add(() ->
+                        {
+                            ItemStack beef = Items.COBBLESTONE.getDefaultInstance();
+                            beef.setCount(53);
+                            return beef;
+                        })
+                        .add(() ->
+                        {
+                            ItemStack beef = Items.COOKED_BEEF.getDefaultInstance();
+                            beef.setCount(27);
+                            return beef;
+                        })
         );
     }
 
