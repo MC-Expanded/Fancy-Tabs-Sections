@@ -1,15 +1,18 @@
 package net.mcexpanded.fancytabsections.Section;
 
+import com.wdiscute.utils.ScreenUtils;
 import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.function.Consumer;
+
 /**
  * @since 4.0
  */
-public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitle<T>> implements Section<T>
+public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitle<T>> implements Section<T>, StickySection
 {
     final ResourceLocation id;
     public Component title = Component.empty();
@@ -18,7 +21,10 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     public int textColor = 0xFFFFFFFF;
     public int textOutline = 0x00000000;
     public boolean textShadow = true;
+    boolean centered = false;
     boolean collapsible = true;
+    boolean sticky = true;
+    Runnable onRender = () -> {};
     ConglomerateOfItems items = ConglomerateOfItems.create();
 
     public AbstractSectionWithTitle(ResourceLocation id)
@@ -29,6 +35,7 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     @Override
     public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
     {
+        onRender.run();
         renderTitle(guiGraphics, font, topLeftX, topLeftY);
     }
 
@@ -36,16 +43,32 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     {
         topLeftX += titleOffsetX;
         topLeftY += titleOffsetY;
-        if (textOutline != 0x00000000)
-        {
-            guiGraphics.drawString(font, title, topLeftX + 1, topLeftY, textOutline, textShadow);
-            guiGraphics.drawString(font, title, topLeftX - 1, topLeftY, textOutline, textShadow);
-            guiGraphics.drawString(font, title, topLeftX, topLeftY + 1, textOutline, textShadow);
-            guiGraphics.drawString(font, title, topLeftX, topLeftY - 1, textOutline, textShadow);
-        }
-        guiGraphics.drawString(font, title, topLeftX, topLeftY, textColor, textShadow);
-    }
 
+        if (centered)
+        {
+            if (textOutline != 0x00000000)
+            {
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY - 1, textOutline, false);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY + 1, textOutline, true);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX + 1, topLeftX + 142 + 1, topLeftY, textOutline, true);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX - 1, topLeftX + 142 - 1, topLeftY, textOutline, false);
+            }
+
+            ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY, textColor, textOutline != 0x00000000 || textShadow);
+        }
+        else
+        {
+            if (textOutline != 0x00000000)
+            {
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY - 1, textOutline, false, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY + 1, textOutline, true, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX + 1, topLeftX + 142 + 1, topLeftY, textOutline, true, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX - 1, topLeftX + 142 - 1, topLeftY, textOutline, false, 100);
+            }
+
+            ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY, textColor, textOutline != 0x00000000 || textShadow, 100);
+        }
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -65,6 +88,7 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     /**
      * Adjusts the offset at which to render the Title.
      * Default is (5, 5)
+     *
      * @since 4.0
      */
     @SuppressWarnings("unchecked")
@@ -72,6 +96,18 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     {
         this.titleOffsetX = x;
         this.titleOffsetY = y;
+        return (T) this;
+    }
+
+    /**
+     * Makes the title of the section centered in the middle + offset
+     *
+     * @since 5.0
+     */
+    @SuppressWarnings("unchecked")
+    public T setCentered(boolean centered)
+    {
+        this.centered = centered;
         return (T) this;
     }
 
@@ -110,6 +146,31 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
         return (T) this;
     }
 
+    /**
+     * Adjusts the offset at which to render the Title.
+     * Default is (5, 5)
+     *
+     * @since 5.0
+     */
+    @SuppressWarnings("unchecked")
+    public T setSticky(boolean sticky)
+    {
+        this.sticky = sticky;
+        return (T) this;
+    }
+
+    /**
+     * Runs code each time {@link Section#render(GuiGraphics, Font, int, int)} is called for this Section.
+     *
+     * @since 5.0
+     */
+    @SuppressWarnings("unchecked")
+    public T setOnRender(Runnable onRender)
+    {
+        this.onRender = onRender;
+        return (T) this;
+    }
+
     @Override
     public ResourceLocation id()
     {
@@ -126,5 +187,11 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     public boolean collapsible()
     {
         return collapsible;
+    }
+
+    @Override
+    public boolean isSticky()
+    {
+        return sticky;
     }
 }

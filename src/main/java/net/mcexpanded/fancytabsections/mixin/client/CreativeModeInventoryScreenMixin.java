@@ -64,15 +64,15 @@ public abstract class CreativeModeInventoryScreenMixin
         List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
         for (Section<?> section : sections)
         {
-            if (BannerRenderer.isInToggle(self, section, mouseX, mouseY))
+            if (section.collapsible() && BannerRenderer.isInToggle(self, section, mouseX, mouseY))
             {
                 //toggle all
                 if (Screen.hasShiftDown())
                 {
                     if (FTSInternal.isCollapsed(section))
-                        sections.forEach(o -> FTSInternal.expand(o, o.equals(section)));
+                        sections.stream().filter(Section::collapsible).forEach(o -> FTSInternal.expand(o, o.equals(section)));
                     else
-                        sections.forEach(o -> FTSInternal.collapse(o, o.equals(section)));
+                        sections.stream().filter(Section::collapsible).forEach(o -> FTSInternal.collapse(o, o.equals(section)));
                 }
                 //toggle clicked
                 else
@@ -80,7 +80,6 @@ public abstract class CreativeModeInventoryScreenMixin
                     FTSInternal.toggle(section);
                 }
 
-                //FTSInternal.toggle(section);
                 //refresh tab
                 FTSInternal.applyItems(selectedTab);
                 this.refreshCurrentTabContents(selectedTab.getDisplayItems());

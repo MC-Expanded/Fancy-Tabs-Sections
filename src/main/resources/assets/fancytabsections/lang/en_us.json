@@ -3,7 +3,9 @@
   "itemGroup.fancytabsections.dirty_tools": "Dirty Tools",
 
   "section.fancytabsections.shiny_things": "Shiny Things",
-  "section.fancytabsections.even_more_shiny_things": "Even More Shiny Things!",
+  "section.fancytabsections.pretty_things": "Pretty Things!",
+  "section.fancytabsections.secret_things": "Secret section which has a very long name to showcase scrolling...",
+  "section.fancytabsections.hotbar": "Correct Hotbar Order",
   "section.fancytabsections.very_dirty_tools": "Very Dirty Tools",
   "section.fancytabsections.decently_dirty_tools": "Decently Dirty Tools"
 }
