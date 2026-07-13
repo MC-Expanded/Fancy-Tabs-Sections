@@ -6,6 +6,7 @@ import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.Registries;
@@ -118,6 +119,7 @@ public interface Section<T extends Section<T>>
      */
     default void renderToggle(CreativeModeInventoryScreen screen, GuiGraphicsExtractor graphics, Section<?> section, int x, int y, int w, int h, int mouseX, int mouseY, boolean isHoveringAny)
     {
+        if (!section.collapsible()) return;
         // Top Left of Right-most slot of the banner row.
         int tx1 = x + w + 3;
         int tx0 = tx1 - BannerRenderer.ROW_HEIGHT;
