@@ -1,6 +1,7 @@
 package net.mcexpanded.fancytabsections;
 
 import net.mcexpanded.fancytabsections.Section.Section;
+import net.mcexpanded.fancytabsections.Section.StickySection;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
 import net.mcexpanded.fancytabsections.mixin.CreativeModeTabAccessor;
 import net.minecraft.client.Minecraft;
@@ -128,10 +129,28 @@ public class FTSInternal
                 int currentRow = 0;
                 for (Section<?> sectionBeingChecked : list)
                 {
-                    //if sectionBeingChecked is the section requested, return the currentRow
-                    if (sectionBeingChecked == section) return currentRow;
-                    //int division smiley face :)
+                    // if sectionBeingChecked is the section requested
+                    if (sectionBeingChecked == section)
+                    {
+                        int contentRows = isCollapsed(sectionBeingChecked) ? 0 : (sectionBeingChecked.items().getStacks().size() - 1) / 9 + 1;
+
+                        int sectionEnd = currentRow + contentRows;
+
+                        if (
+                                sectionBeingChecked instanceof StickySection sticky
+                                && sticky.isSticky()
+                                && BannerRenderer.CURRENT_ROW >= currentRow
+                                && BannerRenderer.CURRENT_ROW <= sectionEnd
+                        )
+                            return BannerRenderer.CURRENT_ROW;
+
+                        return currentRow;
+                    }
+
+                    // Banner row
                     currentRow++;
+
+                    // Content rows
                     if (!isCollapsed(sectionBeingChecked))
                         currentRow += (sectionBeingChecked.items().getStacks().size() - 1) / 9 + 1;
                 }
