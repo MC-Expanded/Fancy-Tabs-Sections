@@ -15,8 +15,11 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
     boolean collapsible = true;
     int verticalSize = 162;
     int horizontalSize = 18;
+    int offsetX = 0;
+    int offsetY = 0;
     ConglomerateOfItems items = ConglomerateOfItems.create();
     public int bannerColor = 0xFF45BB77;
+    public int bannerBorderColor = brighten(bannerColor, 0.2f);
 
     public SectionColored create(Identifier id)
     {
@@ -28,8 +31,6 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
         super(id);
         this.title = Component.translatable("section." + id.getNamespace() + "." + id.getPath());
     }
-
-
 
     public SectionColored(Identifier id,
                           Component title,
@@ -95,10 +96,10 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
     public void render(GuiGraphicsExtractor guiGraphics, Font font, int topLeftX, int topLeftY)
     {
         //render border
-        guiGraphics.fill(topLeftX, topLeftY, topLeftX + 162, topLeftY + 18, brighten(bannerColor, 0.2f));
+        guiGraphics.fill(topLeftX + offsetX, topLeftY + offsetY, topLeftX + 162 - offsetX, topLeftY + 18 - offsetY, bannerBorderColor);
 
         //render flat color background
-        guiGraphics.fill(topLeftX + 1, topLeftY + 1, topLeftX + 161, topLeftY + 17, bannerColor);
+        guiGraphics.fill(topLeftX + offsetX + 1, topLeftY + offsetY + 1, topLeftX + 161 - offsetX, topLeftY + 17 - offsetY, bannerColor);
 
         super.render(guiGraphics, font, topLeftX, topLeftY);
     }
@@ -124,6 +125,7 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
     public SectionColored setBannerColor(int bannerColor)
     {
         this.bannerColor = bannerColor;
+        this.bannerBorderColor = brighten(bannerColor, 0.2f);
         return this;
     }
 
@@ -142,6 +144,45 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
     public SectionColored setItems(ConglomerateOfItems items)
     {
         this.items = items;
+        return this;
+    }
+
+    /**
+     * @since 5.0
+     */
+    public SectionColored setBannerBorderColor(int bannerBorderColor)
+    {
+        this.bannerBorderColor = bannerBorderColor;
+        return this;
+    }
+
+    /**
+     * @since 5.0
+     */
+    public SectionColored setOffsetX(int offsetX)
+    {
+        this.offsetX = offsetX;
+        return this;
+    }
+
+    /**
+     * @since 5.0
+     */
+    public SectionColored setOffsetY(int offsety)
+    {
+        this.offsetY = offsety;
+        return this;
+    }
+
+    /**
+     * @since 5.0
+     */
+    public SectionColored setTextureInsideRow()
+    {
+        horizontalSize = 160;
+        verticalSize = 16;
+        offsetX = 1;
+        offsetY = 1;
         return this;
     }
 }

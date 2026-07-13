@@ -133,9 +133,22 @@ public class FTSExampleMod
 
         // This adds a new section to "fancy_things" consisting of a (hopefully) populated item tag, and one without any items
         FancyTabSections.addSection(rl("fancy_things"),
-                new SectionColored(rl("pretty_things"))
+                new SectionTextured(rl("pretty_things"))
                         //makes the title centered on the banner
                         .setCentered(true)
+
+                        //makes the banner not stick to the top when scrolling
+                        //.setSticky(false)
+
+                        //defines the texture size to be 160x16
+                        //.setHorizontalSize(160)
+                        //.setVerticalSize(16)
+                        //offset by 1 pixel right and down, so it's centered on the banner still
+                        //.setTextureOffset(1, 1)
+
+                        //makes the texture appear "inside the row" rather than on top. Some people prefer this look
+                        .setTextureInsideRow()
+
                         //adds all items of this TagKey<Item>
                         .addItemTag(BlockItemTags.FLOWERS.item())
                         //if tag has no items, none are added
@@ -162,7 +175,14 @@ public class FTSExampleMod
         // This adds a forth section to "fancy_things"
         FancyTabSections.addSection(rl("fancy_things"),
                 new SectionColored(rl("hotbar"))
+                        .setTextColor(0xFFFF0000)
+                        .setTextShadow(false)
+                        .setTextOutline(0xFFFFFFFF)
                         .setBannerColor(0xffbf6a6a)
+                        //makes the banner color appear "inside the row" rather than on top. Some people prefer this look
+                        .setTextureInsideRow()
+
+                        //add correct horbar order
                         .add(Items.NETHERITE_SWORD)
                         .add(Items.NETHERITE_PICKAXE)
                         .add(Items.NETHERITE_SHOVEL)

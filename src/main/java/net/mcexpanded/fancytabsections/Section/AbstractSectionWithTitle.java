@@ -48,25 +48,25 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY - 1, textOutline, false);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY + 1, textOutline, true);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX + 1, topLeftX + 142 + 1, topLeftY, textOutline, true);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX - 1, topLeftX + 142 - 1, topLeftY, textOutline, false);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow);
+                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false);
             }
 
-            ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 142, topLeftY, textColor, textOutline != 0x00000000 || textShadow);
+            ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow);
         }
         else
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY - 1, textOutline, false, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY + 1, textOutline, true, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX + 1, topLeftX + 142 + 1, topLeftY, textOutline, true, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX - 1, topLeftX + 142 - 1, topLeftY, textOutline, false, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow, 100);
+                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false, 100);
             }
 
-            ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 142, topLeftY, textColor, textOutline != 0x00000000 || textShadow, 100);
+            ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow, 100);
         }
     }
 

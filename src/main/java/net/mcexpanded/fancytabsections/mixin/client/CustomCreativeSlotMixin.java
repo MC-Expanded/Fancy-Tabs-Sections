@@ -11,6 +11,13 @@ public abstract class CustomCreativeSlotMixin extends Slot
     public CustomCreativeSlotMixin() { super(null, 0, 0, 0); }
 
     @Override
+    public boolean isActive()
+    {
+        int absoluteRow = BannerRenderer.CURRENT_ROW + this.index / 9;
+        return !FTSInternal.isBannerRow(BannerRenderer.CURRENT_TAB, absoluteRow);
+    }
+
+    @Override
     public boolean isHighlightable()
     {
         int absoluteRow = BannerRenderer.CURRENT_ROW + this.index / 9;
