@@ -14,12 +14,17 @@ public class SectionTextured extends AbstractSectionWithTitle<SectionTextured>
     ResourceLocation texture;
     int horizontalSize = 162;
     int verticalSize = 18;
+    int textureOffsetX = 0;
+    int textureOffsetY = 0;
 
     @Override
     public void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY)
     {
-        guiGraphics.blit(texture, topLeftX, topLeftY, 0, 0,
-                horizontalSize, verticalSize, horizontalSize, verticalSize);
+        guiGraphics.blit(texture,
+                topLeftX + textureOffsetX, topLeftY + textureOffsetY,
+                0, 0,
+                horizontalSize, verticalSize,
+                horizontalSize, verticalSize);
 
         super.render(guiGraphics, font, topLeftX, topLeftY);
     }
@@ -105,6 +110,34 @@ public class SectionTextured extends AbstractSectionWithTitle<SectionTextured>
     public SectionTextured setVerticalSize(int verticalSize)
     {
         this.verticalSize = verticalSize;
+        return this;
+    }
+
+    public SectionTextured setTextureOffset(int x, int y)
+    {
+        this.textureOffsetX = x;
+        this.textureOffsetY = y;
+        return this;
+    }
+
+    public SectionTextured setTextureOffsetX(int textureOffsetX)
+    {
+        this.textureOffsetX = textureOffsetX;
+        return this;
+    }
+
+    public SectionTextured setTextureOffsetY(int textureOffsetY)
+    {
+        this.textureOffsetY = textureOffsetY;
+        return this;
+    }
+
+    public SectionTextured setTextureInsideRow()
+    {
+        horizontalSize = 160;
+        verticalSize = 16;
+        textureOffsetX = 1;
+        textureOffsetY = 1;
         return this;
     }
 }

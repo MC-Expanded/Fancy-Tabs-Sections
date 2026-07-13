@@ -37,7 +37,6 @@ public class BannerRenderer
     {
         int topLeftX = screen.getGuiLeft() + 8;
         int top = screen.getGuiTop() + 17;
-        int w = BANNER_WIDTH;
 
         Font font = Minecraft.getInstance().font;
 
@@ -54,7 +53,7 @@ public class BannerRenderer
             section.render(guiGraphics, font, topLeftX, topLeftY);
 
             boolean isHoveringAny = sections.stream().anyMatch(o -> BannerRenderer.isInToggle(screen, o, mouseX, mouseY));
-            section.renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, w, 18, mouseX, mouseY, isHoveringAny);
+            section.renderToggle(screen, guiGraphics, section, topLeftX, topLeftY, BANNER_WIDTH, 18, mouseX, mouseY, isHoveringAny);
         }
     }
 
@@ -82,5 +81,36 @@ public class BannerRenderer
         int tx0 = tx1 - ROW_HEIGHT;
 
         return mouseX >= tx0 && mouseX < tx1 && mouseY >= y && mouseY < y + h;
+    }
+
+    /**
+     * @return true if the given screen-space coordinate falls within a banner
+     * @since 5.0
+     */
+    @ApiStatus.Internal
+    public static boolean isInBanner(CreativeModeInventoryScreen screen, double mouseX, double mouseY)
+    {
+        List<Section<?>> orDefault = FancyTabSections.REGISTERED_TABS.getOrDefault(BannerRenderer.CURRENT_TAB, new ArrayList<>());
+
+        for (Section<?> section : orDefault)
+        {
+            int sectionRow = FTSInternal.getRowForSection(section);
+            if (sectionRow == -1) continue;
+
+            int relativeRow = sectionRow - CURRENT_ROW;
+            if (relativeRow < 0 || relativeRow >= VISIBLE_ROWS) continue;
+
+            int left = screen.getGuiLeft() + GRID_X_OFFSET;
+            int top = screen.getGuiTop() + GRID_Y_OFFSET;
+            int y = top + relativeRow * ROW_HEIGHT;
+            int h = ROW_HEIGHT - 1;
+
+            int tx0 = left - 2;
+            int tx1 = left + BANNER_WIDTH + 1;
+
+            if(mouseX >= tx0 && mouseX < tx1 && mouseY >= y && mouseY < y + h)
+                return true;
+        }
+        return false;
     }
 }
