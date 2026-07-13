@@ -3,26 +3,34 @@ package net.mcexpanded.fancytabsections;
 import net.mcexpanded.fancytabsections.Section.SectionAnimatedTextured;
 import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.mcexpanded.fancytabsections.Section.SectionTextured;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-@Mod(FancyTabSections.MOD_ID)
+/**
+ * @since 1.0
+ */
+@ApiStatus.Internal
 public class FTSExampleMod
 {
+    /**
+     * Helper method for creation of Identifiers under the fancytabsections namespace
+     * @return A Identifier in the format fancytabsections:[path]
+     */
     public static Identifier rl(String path)
     {
         return Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, path);
@@ -33,11 +41,13 @@ public class FTSExampleMod
      */
     public FTSExampleMod(IEventBus modEventBus)
     {
-        //prevents example mod from running
-        if (true) return;
+        //prevents example mod from running in non-dev environment
+        if (FMLLoader.getCurrent().isProduction()) return;
 
-        //register our creative mode tabs as usual, leaving them empty
-        FTSExampleCreativeModeTabs.register(modEventBus);
+        //register a CreativeModeTab, either using FancyTabSection's helper, or doing our own setup as usual
+        FancyTabSections.registerCreativeModeTab(modEventBus, rl("fancy_things"), Items.DIAMOND);
+        //register a second CreativeModeTab
+        FancyTabSections.registerCreativeModeTab(modEventBus, rl("dirty_tools"), Items.STONE_AXE);
 
         //register our custom items
         FTSExampleModItems.register(modEventBus);
@@ -92,7 +102,7 @@ public class FTSExampleMod
         );
 
         //Add an animated banner section to our second creative mode tab "shiny_things"
-        FancyTabSections.addSection(rl("shiny_things"),
+        FancyTabSections.addSection(rl("fancy_things"),
                 //when using the default texture location, it must be placed at [namespace]:textures/gui/fancy_tab_section/[path].png
                 new SectionAnimatedTextured(rl("shiny_things"))
                         //defines how many frames our animation file has
@@ -120,7 +130,7 @@ public class FTSExampleMod
         );
 
         // This adds a new section to "shiny_things" consisting of a (hopefully) populated item tag, and one without any items
-        FancyTabSections.addSection(rl("shiny_things"),
+        FancyTabSections.addSection(rl("fancy_things"),
                 new SectionColored(rl("pretty_things"))
                         //adds all items of this TagKey<Item>
                         .addItemTag(BlockItemTags.FLOWERS.item())
@@ -129,35 +139,9 @@ public class FTSExampleMod
         );
     }
 
-    public interface FTSExampleCreativeModeTabs
-    {
-        DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-                DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, FancyTabSections.MOD_ID);
-
-        Supplier<CreativeModeTab> SHINY_THINGS = CREATIVE_MODE_TABS.register("shiny_things", () -> CreativeModeTab.builder()
-                .icon(() -> new ItemStack(Items.DIAMOND))
-                .title(Component.translatable("itemGroup.fts.shiny_things"))
-                .displayItems((_, _) ->
-                {
-                    // Intentionally empty as we add the items through FancyTabsSections#addSection
-                })
-                .build());
-
-        Supplier<CreativeModeTab> TOOLS = CREATIVE_MODE_TABS.register("dirty_tools", () -> CreativeModeTab.builder()
-                .icon(() -> new ItemStack(Items.WOODEN_PICKAXE))
-                .title(Component.translatable("itemGroup.fts.dirty_tools"))
-                .displayItems((_, _) ->
-                {
-                    // Intentionally empty as we add the items through FancyTabsSections#addSection
-                })
-                .build());
-
-        static void register(IEventBus eventBus)
-        {
-            CREATIVE_MODE_TABS.register(eventBus);
-        }
-    }
-
+    /**
+     * Example ModItems class
+     */
     public interface FTSExampleModItems
     {
         DeferredRegister.Items ITEMS = DeferredRegister.createItems(FancyTabSections.MOD_ID);
@@ -170,6 +154,4 @@ public class FTSExampleMod
             ITEMS.register(eventBus);
         }
     }
-
-
 }
