@@ -8,9 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,15 +22,22 @@ import java.util.function.Supplier;
 /**
  * @since 3.0
  */
-public interface Section<T extends Section<T>> {
+public interface Section<T extends Section<T>>
+{
     ResourceLocation id();
-    default boolean collapsible() { return true; }
+
+    default boolean collapsible()
+    {
+        return true;
+    }
+
     ConglomerateOfItems items();
 
     void render(GuiGraphics guiGraphics, Font font, int topLeftX, int topLeftY);
 
     /**
      * ConglomerateOfItems redirect helper methods
+     *
      * @since 4.0
      */
     @SuppressWarnings("unchecked")
@@ -112,6 +117,7 @@ public interface Section<T extends Section<T>> {
      */
     default void renderToggle(CreativeModeInventoryScreen screen, GuiGraphics graphics, Section<?> section, int x, int y, int w, int h, int mouseX, int mouseY, boolean isHoveringAny)
     {
+        if (!section.collapsible()) return;
         // Top Left of Right-most slot of the banner row.
         int tx1 = x + w + 3;
         int tx0 = tx1 - BannerRenderer.ROW_HEIGHT;

@@ -13,6 +13,9 @@ version = mod_version
 group = mod_group_id
 
 repositories {
+
+    mavenLocal()
+
     //modrinth
     maven {
         url = "https://api.modrinth.com/maven"
@@ -20,7 +23,8 @@ repositories {
 }
 
 dependencies {
-
+    //wdUtils
+    jarJar(implementation("com.wdiscute:wdUtils:1.2-NEOFORGE-1.21.1"))
 }
 
 publishing {
