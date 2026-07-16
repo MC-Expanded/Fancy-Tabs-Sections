@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -30,6 +31,18 @@ public interface Section<T extends Section<T>>
     default boolean collapsible()
     {
         return true;
+    }
+
+    /**
+     * @return A display title for this section, or null if it doesn't have one.
+     * Lets features that need a human-readable label (e.g. a jump list) work with any
+     * Section implementation, without needing to know its concrete type.
+     *
+     * @since 5.1
+     */
+    default Component title()
+    {
+        return null;
     }
 
     ConglomerateOfItems items();
