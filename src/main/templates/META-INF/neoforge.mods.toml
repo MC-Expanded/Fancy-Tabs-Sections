@@ -5,6 +5,7 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="wdiscute, Kaupenjoe, nanoattack, NicciCage, SockyWocky7"
+iconFile = "icon.png"
 description='''
 A library to allow for easy control of Sections inside Creative Mode Tabs
 '''

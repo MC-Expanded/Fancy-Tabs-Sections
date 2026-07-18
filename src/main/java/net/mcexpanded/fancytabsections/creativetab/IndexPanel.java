@@ -221,7 +221,7 @@ public final class IndexPanel
 
     public static boolean mouseClicked(CreativeModeInventoryScreen screen, List<Section<?>> sections, float scrollOffs, double mouseX, double mouseY, int button)
     {
-        if (button != 0) return false;
+        if (button != 1) return false;
 
         int tx = toggleX(screen);
         int ty = toggleY(screen);
