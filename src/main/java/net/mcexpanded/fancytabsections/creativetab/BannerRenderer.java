@@ -6,8 +6,8 @@ import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -30,10 +30,10 @@ public class BannerRenderer
     public static final int VISIBLE_ROWS = 5;
     public static final int BANNER_WIDTH = GRID_COLS * ROW_HEIGHT - 4;
 
-    public static final Identifier EXPANDED_BUTTON = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button.png");
-    public static final Identifier EXPANDED_BUTTON_HIGHLIGHT = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button_highlight.png");
-    public static final Identifier COLLAPSED_BUTTON = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button.png");
-    public static final Identifier COLLAPSED_BUTTON_HIGHLIGHT = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button_highlight.png");
+    public static final Identifier EXPANDED_BUTTON = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/expanded_button.png");
+    public static final Identifier EXPANDED_BUTTON_HIGHLIGHT = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/expanded_button_highlight.png");
+    public static final Identifier COLLAPSED_BUTTON = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/collapsed_button.png");
+    public static final Identifier COLLAPSED_BUTTON_HIGHLIGHT = Identifier.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/collapsed_button_highlight.png");
 
     public static void render(CreativeModeInventoryScreen screen, GuiGraphicsExtractor guiGraphics, List<Section<?>> sections, int mouseX, int mouseY)
     {
@@ -95,9 +95,9 @@ public class BannerRenderer
     @ApiStatus.Internal
     public static boolean isInBanner(CreativeModeInventoryScreen screen, double mouseX, double mouseY)
     {
-        List<Section<?>> orDefault = FancyTabSections.REGISTERED_TABS.getOrDefault(BannerRenderer.CURRENT_TAB, new ArrayList<>());
+        List<Section<?>> list = FancyTabSections.REGISTERED_TABS.getOrDefault(BannerRenderer.CURRENT_TAB, List.of());
 
-        for (Section<?> section : orDefault)
+        for (Section<?> section : list)
         {
             int sectionRow = FTSInternal.getRowForSection(section);
             if (sectionRow == -1) continue;

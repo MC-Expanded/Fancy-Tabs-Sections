@@ -1,5 +1,6 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
+import net.mcexpanded.fancytabsections.FTSConfig;
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.Minecraft;
@@ -16,17 +17,20 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A collapsible jump-list along the left edge of the creative-mode inventory screen,
  * showing one icon per registered {@link Section} of the currently selected tab. Clicking
  * an icon smooth-scrolls the grid so that section's banner lands at the top.
  *
- * @since 5.1
+ * @since 6.0
  */
 public final class IndexPanel
 {
-    private IndexPanel() {}
+    private IndexPanel()
+    {
+    }
 
     private static final int ICON = 18;
     private static final int GAP = 2;
@@ -52,7 +56,6 @@ public final class IndexPanel
 
     private static final long ANIM_MS = 250;
 
-    private static boolean expanded = false;
     private static float panelScroll = 0f;
 
     private static long animStart = -1;
@@ -153,7 +156,7 @@ public final class IndexPanel
     {
         drawToggle(screen, g, mouseX, mouseY);
 
-        if (!expanded || sections.isEmpty()) return;
+        if (!FTSConfig.INDEX_EXPANDED.get() || sections.isEmpty()) return;
 
         int count = sections.size();
         panelScroll = Mth.clamp(panelScroll, 0f, maxScroll(screen, count));
@@ -175,28 +178,25 @@ public final class IndexPanel
             if (iy + ICON < py || iy > pBottom) continue;
 
             boolean hovered = mouseX >= ix && mouseX < ix + ICON && mouseY >= iy && mouseY < iy + ICON
-                    && mouseY >= py && mouseY < pBottom;
+                              && mouseY >= py && mouseY < pBottom;
 
             drawSunkenSlot(g, ix, iy, ICON, ICON);
             if (hovered) g.fill(ix + 1, iy + 1, ix + ICON - 1, iy + ICON - 1, HOVER);
 
             Section<?> section = sections.get(i);
-            ItemStack icon = iconFor(section);
-            if (!icon.isEmpty())
-            {
-                g.item(icon, ix + 1, iy + 1);
-                g.itemDecorations(Minecraft.getInstance().font, icon, ix + 1, iy + 1);
-            }
+            ItemStack icon = section.icon();
 
-            if (hovered) hoveredTitle = titleFor(section);
+            g.item(icon, ix + 1, iy + 1);
+            g.itemDecorations(Minecraft.getInstance().font, icon, ix + 1, iy + 1);
+
+            Component title = section.title();
+            if (hovered) hoveredTitle = title == null ? Component.literal(section.id().toString()) : title;
         }
         g.disableScissor();
 
         if (hoveredTitle != null)
         {
-            g.tooltip(Minecraft.getInstance().font,
-                    List.of(ClientTooltipComponent.create(hoveredTitle.getVisualOrderText())),
-                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+            g.setTooltipForNextFrame(hoveredTitle, mouseX, mouseY);
         }
     }
 
@@ -207,14 +207,15 @@ public final class IndexPanel
         int tx = toggleX(screen);
         int ty = toggleY(screen);
         if (mouseX >= tx - TOGGLE_HIT_PAD && mouseX < tx + TOGGLE_SIZE + TOGGLE_HIT_PAD
-                && mouseY >= ty - TOGGLE_HIT_PAD && mouseY < ty + TOGGLE_SIZE + TOGGLE_HIT_PAD)
+            && mouseY >= ty - TOGGLE_HIT_PAD && mouseY < ty + TOGGLE_SIZE + TOGGLE_HIT_PAD)
         {
-            expanded = !expanded;
+            FTSConfig.INDEX_EXPANDED.set(!FTSConfig.INDEX_EXPANDED.get());
+            FTSConfig.INDEX_EXPANDED.save();
             panelScroll = 0f;
             return true;
         }
 
-        if (!expanded || sections.isEmpty())
+        if (!FTSConfig.INDEX_EXPANDED.get() || sections.isEmpty())
         {
             cancelAnim();
             return false;
@@ -243,7 +244,7 @@ public final class IndexPanel
 
     public static boolean mouseScrolled(CreativeModeInventoryScreen screen, List<Section<?>> sections, double mouseX, double mouseY, double scrollY)
     {
-        if (!expanded || sections.isEmpty())
+        if (!FTSConfig.INDEX_EXPANDED.get() || sections.isEmpty())
         {
             cancelAnim();
             return false;
@@ -263,28 +264,13 @@ public final class IndexPanel
         return true;
     }
 
-    private static ItemStack iconFor(Section<?> section)
-    {
-        for (ItemStack stack : section.items().getStacks())
-        {
-            if (!stack.isEmpty()) return stack;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    private static Component titleFor(Section<?> section)
-    {
-        Component title = section.title();
-        return title != null ? title : Component.literal(section.id().toString());
-    }
-
     private static void drawToggle(CreativeModeInventoryScreen screen, GuiGraphicsExtractor g, int mouseX, int mouseY)
     {
         int tx = toggleX(screen);
         int ty = toggleY(screen);
         boolean hovered = mouseX >= tx && mouseX < tx + TOGGLE_SIZE && mouseY >= ty && mouseY < ty + TOGGLE_SIZE;
 
-        Identifier texture = expanded ? TOGGLE_EXPANDED : TOGGLE_COLLAPSED;
+        Identifier texture = FTSConfig.INDEX_EXPANDED.get() ? TOGGLE_EXPANDED : TOGGLE_COLLAPSED;
         g.blit(RenderPipelines.GUI_TEXTURED, texture, tx, ty, 0, 0, TOGGLE_SIZE, TOGGLE_SIZE, TOGGLE_SIZE, TOGGLE_SIZE);
         if (hovered)
         {

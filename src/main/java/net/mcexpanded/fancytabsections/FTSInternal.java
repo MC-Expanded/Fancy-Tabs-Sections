@@ -14,12 +14,17 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.event.DefaultDataComponentsBoundEvent;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,6 +45,37 @@ import java.util.stream.Collectors;
 @Mod(FancyTabSections.MOD_ID)
 public class FTSInternal
 {
+
+    public FTSInternal(IEventBus modEventBus, ModContainer modContainer)
+    {
+        new FTSExampleMod(modEventBus);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, FTSConfig.SPEC);
+    }
+
+    /**
+     * Client-Only class to handle sounds, preventing crashes from third parties who might call unsafe methods directly.
+     *
+     * @since 4.0
+     */
+    @Mod(value = FancyTabSections.MOD_ID, dist = Dist.CLIENT)
+    public static class Client
+    {
+        public Client(ModContainer modContainer)
+        {
+            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        }
+
+        public static void playSound(boolean b)
+        {
+            if (b)
+                Minecraft.getInstance().getSoundManager().play(
+                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1f, 1F));
+            else
+                Minecraft.getInstance().getSoundManager().play(
+                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
+        }
+    }
+
     /**
      * Retrieves the items stored in the sections and applies them to the given CreativeModeTab
      *
@@ -134,6 +170,7 @@ public class FTSInternal
             {
                 //resolve stacks from conglomerate
                 section.items().resolveStacks(registryAccess);
+                section.onReload(registryAccess);
             }
         });
     }
@@ -252,29 +289,6 @@ public class FTSInternal
             if (getRowForSection(section) == row) return true;
         }
         return false;
-    }
-
-    /**
-     * Client-Only class to handle sounds, preventing crashes from third parties who might call unsafe methods directly.
-     *
-     * @since 4.0
-     */
-    public static class Client
-    {
-        public static void playSound(boolean b)
-        {
-            if (b)
-                Minecraft.getInstance().getSoundManager().play(
-                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_ON, 1f, 1F));
-            else
-                Minecraft.getInstance().getSoundManager().play(
-                        SimpleSoundInstance.forUI(SoundEvents.BAMBOO_WOOD_BUTTON_CLICK_OFF, 1f, 1F));
-        }
-    }
-
-    public FTSInternal(IEventBus modEventBus, ModContainer modContainer)
-    {
-        new FTSExampleMod(modEventBus);
     }
 
     public static Supplier<CreativeModeTab> registerTab(IEventBus bus, Identifier rl, Supplier<ItemStack> sup)

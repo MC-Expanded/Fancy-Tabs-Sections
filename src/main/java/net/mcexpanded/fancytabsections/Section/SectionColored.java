@@ -29,7 +29,6 @@ public class SectionColored extends AbstractSectionWithTitle<SectionColored>
     public SectionColored(Identifier id)
     {
         super(id);
-        this.title = Component.translatable("section." + id.getNamespace() + "." + id.getPath());
     }
 
     public SectionColored(Identifier id,
