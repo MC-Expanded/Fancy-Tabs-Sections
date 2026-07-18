@@ -178,6 +178,12 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     }
 
     @Override
+    public Component title()
+    {
+        return title;
+    }
+
+    @Override
     public ConglomerateOfItems items()
     {
         return items;

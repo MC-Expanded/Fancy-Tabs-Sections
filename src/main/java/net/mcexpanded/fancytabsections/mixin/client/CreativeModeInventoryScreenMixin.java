@@ -3,6 +3,7 @@ package net.mcexpanded.fancytabsections.mixin.client;
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
+import net.mcexpanded.fancytabsections.creativetab.IndexPanel;
 import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -28,11 +30,15 @@ public abstract class CreativeModeInventoryScreenMixin
     private static CreativeModeTab selectedTab;
 
     @Shadow
+    private float scrollOffs;
+
+    @Shadow
     protected abstract void refreshCurrentTabContents(Collection<ItemStack> items);
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     private void fts$renderBanners(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY, CallbackInfo ci)
     {
+        CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) (Object) this;
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
 
         if (BannerRenderer.CURRENT_TAB == null || !BannerRenderer.CURRENT_TAB.equals(tab))
@@ -44,8 +50,17 @@ public abstract class CreativeModeInventoryScreenMixin
 
         if (FancyTabSections.REGISTERED_TABS.containsKey(tab))
         {
-            BannerRenderer.render((CreativeModeInventoryScreen) (Object) this, guiGraphics,
-                    FancyTabSections.REGISTERED_TABS.get(tab), mouseX, mouseY);
+            List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+
+            BannerRenderer.render(self, guiGraphics, sections, mouseX, mouseY);
+
+            float jumpTo = IndexPanel.tick();
+            if (jumpTo >= 0f)
+            {
+                this.scrollOffs = jumpTo;
+                self.getMenu().scrollTo(jumpTo);
+            }
+            IndexPanel.render(self, guiGraphics, sections, mouseX, mouseY);
         }
     }
 
@@ -66,6 +81,14 @@ public abstract class CreativeModeInventoryScreenMixin
         ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
         if (!FancyTabSections.REGISTERED_TABS.containsKey(tab)) return;
 
+        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+
+        if (IndexPanel.mouseClicked(self, sections, this.scrollOffs, mouseX, mouseY, button))
+        {
+            cir.setReturnValue(true);
+            return;
+        }
+
         if (BannerRenderer.isInBanner(self, mouseX, mouseY))
             if (!self.getMenu().getCarried().isEmpty())
             {
@@ -76,7 +99,6 @@ public abstract class CreativeModeInventoryScreenMixin
 
         if (!self.getMenu().getCarried().isEmpty()) return;
 
-        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
         for (Section<?> section : sections)
         {
             if (section.collapsible() && BannerRenderer.isInToggle(self, section, mouseX, mouseY))
@@ -102,6 +124,31 @@ public abstract class CreativeModeInventoryScreenMixin
                 cir.setReturnValue(true);
                 return;
             }
+        }
+    }
+
+    @ModifyArg(
+            method = "renderLabels",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;IIIZ)I"),
+            index = 2)
+    private int fts$shiftTitleForIndexPanel(int x)
+    {
+        ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
+        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+        return IndexPanel.active(sections) ? IndexPanel.titleX() : x;
+    }
+
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
+    private void fts$indexPanelScroll(double mouseX, double mouseY, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir)
+    {
+        ResourceLocation tab = BuiltInRegistries.CREATIVE_MODE_TAB.getKey(selectedTab);
+        List<Section<?>> sections = FancyTabSections.REGISTERED_TABS.get(tab);
+        if (sections == null) return;
+
+        if (IndexPanel.mouseScrolled((CreativeModeInventoryScreen) (Object) this, sections, mouseX, mouseY, scrollY))
+        {
+            cir.setReturnValue(true);
         }
     }
 }
