@@ -12,7 +12,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 displayURL="http://curseforge.com/minecraft/mc-mods/fancy-tab-sections"
 logoFile = "icon.png"
-mod_authors="wdiscute, Kaupenjoe, nanoattack"
+mod_authors="wdiscute, Kaupenjoe, nanoattack, NicciCage, SockyWocky7"
 description='''
 A library to allow for easy control of Sections inside Creative Mode Tabs
 '''
