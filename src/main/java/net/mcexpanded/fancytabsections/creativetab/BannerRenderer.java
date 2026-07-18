@@ -28,10 +28,10 @@ public class BannerRenderer
     public static final int VISIBLE_ROWS = 5;
     public static final int BANNER_WIDTH = GRID_COLS * ROW_HEIGHT - 4;
 
-    public static final ResourceLocation EXPANDED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button.png");
-    public static final ResourceLocation EXPANDED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/expanded_button_highlight.png");
-    public static final ResourceLocation COLLAPSED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button.png");
-    public static final ResourceLocation COLLAPSED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/fancy_tab_section/collapse_button/collapsed_button_highlight.png");
+    public static final ResourceLocation EXPANDED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/expanded_button.png");
+    public static final ResourceLocation EXPANDED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/expanded_button_highlight.png");
+    public static final ResourceLocation COLLAPSED_BUTTON = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/collapsed_button.png");
+    public static final ResourceLocation COLLAPSED_BUTTON_HIGHLIGHT = ResourceLocation.fromNamespaceAndPath(FancyTabSections.MOD_ID, "textures/gui/collapse_button/collapsed_button_highlight.png");
 
     public static void render(CreativeModeInventoryScreen screen, GuiGraphics guiGraphics, List<Section<?>> sections, int mouseX, int mouseY)
     {

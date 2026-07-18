@@ -65,12 +65,6 @@ public abstract class CreativeModeInventoryScreenMixin
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void fts$slotClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
-    {
-
-    }
-
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void fts$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir)
     {
         if (button != 0) return;
