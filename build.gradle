@@ -33,11 +33,16 @@ java {
 
 repositories {
     mavenLocal()
+
+    //jei
+    maven {
+        url = "https://modmaven.dev"
+    }
 }
 
 dependencies {
     //wdUtils
-    jarJar(implementation("com.wdiscute:wdUtils:1.2-NEOFORGE-26.1.2"))
+    jarJar(implementation("com.wdiscute:wdUtils:1.3-NEOFORGE-26.1.2"))
 }
 
 configurations {

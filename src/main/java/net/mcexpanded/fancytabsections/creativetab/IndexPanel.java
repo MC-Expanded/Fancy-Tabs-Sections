@@ -6,18 +6,13 @@ import net.mcexpanded.fancytabsections.Section.Section;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A collapsible jump-list along the left edge of the creative-mode inventory screen,
@@ -40,18 +35,16 @@ public final class IndexPanel
             Identifier.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/toggle_collapsed.png");
     private static final Identifier TOGGLE_EXPANDED =
             Identifier.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/toggle_expanded.png");
+
+    private static final Identifier INDEX_SLOT = Identifier.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border.png");
+    private static final Identifier INDEX_SLOT_BOTTOM = Identifier.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border_bottom.png");
+    private static final Identifier INDEX_SLOT_TOP = Identifier.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border_top.png");
+
     private static final int TOGGLE_LEFT = 6;
     private static final int TOGGLE_SIZE = 8;
     private static final int TOGGLE_TEXT_GAP = 3;
     private static final int TOGGLE_HIT_PAD = 3;
 
-    private static final int PANEL_BG = 0xFFC6C6C6;
-    private static final int OUTER_BORDER = 0xFF000000;
-    private static final int RAISED_HI = 0xFFFFFFFF;
-    private static final int RAISED_SHADOW = 0xFF555555;
-    private static final int SLOT_BG = 0xFF8B8B8B;
-    private static final int SLOT_SHADOW = 0xFF373737;
-    private static final int SLOT_HI = 0xFFFFFFFF;
     private static final int HOVER = 0x60FFFFFF;
 
     private static final long ANIM_MS = 250;
@@ -167,32 +160,58 @@ public final class IndexPanel
         if (h <= 0) return;
         int pBottom = py + h;
 
-        drawRaisedBox(g, px, py, PANEL_W, h);
+        //drawRaisedBox(g, px, py, PANEL_W, h);
 
-        g.enableScissor(px + 2, py + 2, px + PANEL_W - 2, pBottom - 2);
         Component hoveredTitle = null;
-        for (int i = 0; i < count; i++)
+
+        int slotHeight = ICON + GAP;
+        int start = Math.max(0, (int) panelScroll / slotHeight);
+        int visible = Math.min(6, count - start);
+
+        for (int i = 0; i < visible; i++)
         {
+            int sectionIndex = start + i;
+
             int ix = px + (PANEL_W - ICON) / 2;
-            int iy = py + 3 + i * (ICON + GAP) - (int) panelScroll;
-            if (iy + ICON < py || iy > pBottom) continue;
 
-            boolean hovered = mouseX >= ix && mouseX < ix + ICON && mouseY >= iy && mouseY < iy + ICON
-                              && mouseY >= py && mouseY < pBottom;
+            // Keep the 6 slots fixed in place
+            int iy = py + 3 + i * slotHeight;
 
-            drawSunkenSlot(g, ix, iy, ICON, ICON);
-            if (hovered) g.fill(ix + 1, iy + 1, ix + ICON - 1, iy + ICON - 1, HOVER);
+            boolean hovered = mouseX >= ix && mouseX < ix + ICON && mouseY >= iy && mouseY < iy + ICON && mouseY >= py && mouseY < pBottom;
 
-            Section<?> section = sections.get(i);
+            Identifier rl;
+
+            if (i == 0)
+                rl = INDEX_SLOT_TOP;
+            else if (i == visible - 1)
+                rl = INDEX_SLOT_BOTTOM;
+            else
+                rl = INDEX_SLOT;
+
+            g.blit(RenderPipelines.GUI_TEXTURED, rl, ix - 3, iy - 3, 24, 24, 24, 24, 24, 24, 24, 24);
+
+            if (hovered)
+                g.fill(
+                        ix + 1,
+                        iy + 1,
+                        ix + ICON - 1,
+                        iy + ICON - 1,
+                        HOVER
+                );
+
+            Section<?> section = sections.get(sectionIndex);
             ItemStack icon = section.icon();
 
             g.item(icon, ix + 1, iy + 1);
             g.itemDecorations(Minecraft.getInstance().font, icon, ix + 1, iy + 1);
 
             Component title = section.title();
-            if (hovered) hoveredTitle = title == null ? Component.literal(section.id().toString()) : title;
+
+            if (hovered)
+                hoveredTitle = title == null
+                        ? Component.literal(section.id().toString())
+                        : title;
         }
-        g.disableScissor();
 
         if (hoveredTitle != null)
         {
@@ -276,24 +295,5 @@ public final class IndexPanel
         {
             g.fill(tx, ty, tx + TOGGLE_SIZE, ty + TOGGLE_SIZE, HOVER);
         }
-    }
-
-    private static void drawRaisedBox(GuiGraphicsExtractor g, int x, int y, int w, int h)
-    {
-        g.fill(x, y, x + w, y + h, OUTER_BORDER);
-        g.fill(x + 1, y + 1, x + w - 1, y + h - 1, PANEL_BG);
-        g.fill(x + 1, y + 1, x + w - 1, y + 2, RAISED_HI);
-        g.fill(x + 1, y + 1, x + 2, y + h - 1, RAISED_HI);
-        g.fill(x + 1, y + h - 2, x + w - 1, y + h - 1, RAISED_SHADOW);
-        g.fill(x + w - 2, y + 1, x + w - 1, y + h - 1, RAISED_SHADOW);
-    }
-
-    private static void drawSunkenSlot(GuiGraphicsExtractor g, int x, int y, int w, int h)
-    {
-        g.fill(x, y, x + w, y + h, SLOT_BG);
-        g.fill(x, y, x + w, y + 1, SLOT_SHADOW);
-        g.fill(x, y, x + 1, y + h, SLOT_SHADOW);
-        g.fill(x, y + h - 1, x + w, y + h, SLOT_HI);
-        g.fill(x + w - 1, y, x + w, y + h, SLOT_HI);
     }
 }

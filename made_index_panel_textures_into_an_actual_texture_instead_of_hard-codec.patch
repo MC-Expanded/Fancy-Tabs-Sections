@@ -1,0 +1,188 @@
+Subject: [PATCH] made index panel textures into an actual texture instead of hard-codec
+---
+Index: gradle.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle.properties b/gradle.properties
+--- a/gradle.properties	(revision 16e1278e2d2a94258cafed048a17761852007841)
++++ b/gradle.properties	(revision 318943c5f1be1375f3f7887b980b7de3a1318637)
+@@ -15,7 +15,7 @@
+ loader_version_range=[4,)
+ 
+ # Mod Properties
+-mod_version=6.0-NEOFORGE-1.21.1
++mod_version=6.1-NEOFORGE-1.21.1
+ 
+ mod_id=fancytabsections
+ mod_name=Fancy Tab Sections
+Index: src/main/java/net/mcexpanded/fancytabsections/creativetab/IndexPanel.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/net/mcexpanded/fancytabsections/creativetab/IndexPanel.java b/src/main/java/net/mcexpanded/fancytabsections/creativetab/IndexPanel.java
+--- a/src/main/java/net/mcexpanded/fancytabsections/creativetab/IndexPanel.java	(revision 16e1278e2d2a94258cafed048a17761852007841)
++++ b/src/main/java/net/mcexpanded/fancytabsections/creativetab/IndexPanel.java	(revision 318943c5f1be1375f3f7887b980b7de3a1318637)
+@@ -1,5 +1,6 @@
+ package net.mcexpanded.fancytabsections.creativetab;
+ 
++import com.wdiscute.utils.ScreenUtils;
+ import net.mcexpanded.fancytabsections.FTSConfig;
+ import net.mcexpanded.fancytabsections.FTSInternal;
+ import net.mcexpanded.fancytabsections.Section.Section;
+@@ -34,18 +35,16 @@
+             ResourceLocation.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/toggle_collapsed.png");
+     private static final ResourceLocation TOGGLE_EXPANDED =
+             ResourceLocation.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/toggle_expanded.png");
++
++    private static final ResourceLocation INDEX_SLOT = ResourceLocation.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border.png");
++    private static final ResourceLocation INDEX_SLOT_BOTTOM = ResourceLocation.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border_bottom.png");
++    private static final ResourceLocation INDEX_SLOT_TOP = ResourceLocation.fromNamespaceAndPath("fancytabsections", "textures/gui/index_panel/slot_border_top.png");
++
+     private static final int TOGGLE_LEFT = 6;
+     private static final int TOGGLE_SIZE = 8;
+     private static final int TOGGLE_TEXT_GAP = 3;
+     private static final int TOGGLE_HIT_PAD = 3;
+ 
+-    private static final int PANEL_BG = 0xFFC6C6C6;
+-    private static final int OUTER_BORDER = 0xFF000000;
+-    private static final int RAISED_HI = 0xFFFFFFFF;
+-    private static final int RAISED_SHADOW = 0xFF555555;
+-    private static final int SLOT_BG = 0xFF8B8B8B;
+-    private static final int SLOT_SHADOW = 0xFF373737;
+-    private static final int SLOT_HI = 0xFFFFFFFF;
+     private static final int HOVER = 0x60FFFFFF;
+ 
+     private static final long ANIM_MS = 250;
+@@ -161,32 +160,63 @@
+         if (h <= 0) return;
+         int pBottom = py + h;
+ 
+-        drawRaisedBox(g, px, py, PANEL_W, h);
++        //drawRaisedBox(g, px, py, PANEL_W, h);
+ 
+-        g.enableScissor(px + 2, py + 2, px + PANEL_W - 2, pBottom - 2);
+         Component hoveredTitle = null;
+-        for (int i = 0; i < count; i++)
++
++        int slotHeight = ICON + GAP;
++        int start = Math.max(0, (int) panelScroll / slotHeight);
++        int visible = Math.min(6, count - start);
++
++        for (int i = 0; i < visible; i++)
+         {
++            int sectionIndex = start + i;
++
+             int ix = px + (PANEL_W - ICON) / 2;
+-            int iy = py + 3 + i * (ICON + GAP) - (int) panelScroll;
+-            if (iy + ICON < py || iy > pBottom) continue;
++
++            // Keep the 6 slots fixed in place
++            int iy = py + 3 + i * slotHeight;
++
++            boolean hovered = mouseX >= ix && mouseX < ix + ICON && mouseY >= iy && mouseY < iy + ICON && mouseY >= py && mouseY < pBottom;
++
++            ResourceLocation rl;
+ 
+-            boolean hovered = mouseX >= ix && mouseX < ix + ICON && mouseY >= iy && mouseY < iy + ICON
+-                              && mouseY >= py && mouseY < pBottom;
++            if (i == 0)
++                rl = INDEX_SLOT_TOP;
++            else if (i == visible - 1)
++                rl = INDEX_SLOT_BOTTOM;
++            else
++                rl = INDEX_SLOT;
+ 
+-            drawSunkenSlot(g, ix, iy, ICON, ICON);
+-            if (hovered) g.fill(ix + 1, iy + 1, ix + ICON - 1, iy + ICON - 1, HOVER);
++            g.blit(rl, ix - 3, iy - 3, 24, 24, 24, 24, 24, 24, 24, 24);
+ 
+-            Section<?> section = sections.get(i);
++            if (hovered)
++                g.fill(
++                        ix + 1,
++                        iy + 1,
++                        ix + ICON - 1,
++                        iy + ICON - 1,
++                        HOVER
++                );
++
++            Section<?> section = sections.get(sectionIndex);
+             ItemStack icon = section.icon();
+ 
+             g.renderItem(icon, ix + 1, iy + 1);
+-            g.renderItemDecorations(Minecraft.getInstance().font, icon, ix + 1, iy + 1);
++            g.renderItemDecorations(
++                    Minecraft.getInstance().font,
++                    icon,
++                    ix + 1,
++                    iy + 1
++            );
+ 
+             Component title = section.title();
+-            if (hovered) hoveredTitle = title == null ? Component.literal(section.id().toString()) : title;
++
++            if (hovered)
++                hoveredTitle = title == null
++                        ? Component.literal(section.id().toString())
++                        : title;
+         }
+-        g.disableScissor();
+ 
+         if (hoveredTitle != null)
+         {
+@@ -271,23 +301,4 @@
+             g.fill(tx, ty, tx + TOGGLE_SIZE, ty + TOGGLE_SIZE, HOVER);
+         }
+     }
+-
+-    private static void drawRaisedBox(GuiGraphics g, int x, int y, int w, int h)
+-    {
+-        g.fill(x, y, x + w, y + h, OUTER_BORDER);
+-        g.fill(x + 1, y + 1, x + w - 1, y + h - 1, PANEL_BG);
+-        g.fill(x + 1, y + 1, x + w - 1, y + 2, RAISED_HI);
+-        g.fill(x + 1, y + 1, x + 2, y + h - 1, RAISED_HI);
+-        g.fill(x + 1, y + h - 2, x + w - 1, y + h - 1, RAISED_SHADOW);
+-        g.fill(x + w - 2, y + 1, x + w - 1, y + h - 1, RAISED_SHADOW);
+-    }
+-
+-    private static void drawSunkenSlot(GuiGraphics g, int x, int y, int w, int h)
+-    {
+-        g.fill(x, y, x + w, y + h, SLOT_BG);
+-        g.fill(x, y, x + w, y + 1, SLOT_SHADOW);
+-        g.fill(x, y, x + 1, y + h, SLOT_SHADOW);
+-        g.fill(x, y + h - 1, x + w, y + h, SLOT_HI);
+-        g.fill(x + w - 1, y, x + w, y + h, SLOT_HI);
+-    }
+ }
+diff --git a/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border.png b/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..c48cfffd937756f21db8b8c127a3a0a221b74e95
+GIT binary patch
+literal 155
+zc%17D@N?(olHy`uVBq!ia0vp^5+KaM1SIoCSFHz9jKx9jP7LeL$-D$|LOop^Lo9le
+zQxXz>{Qv*|<KyF!Cs<osTh;yNr6@()OD&k?s8bM@n5ejNmj4_JMt)(jl+Fng1UAK*
+z{5X_xWkF!G8?RIno8qa(!s>nj#}&Lz{dbgfWB4B~^3Y2~RuX6dgQu&X%Q~loCIHqf
+BGD-jd
+
+diff --git a/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border_bottom.png b/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border_bottom.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..3df381b443b46f7e3086d6cb8be0ce23c32ef77d
+GIT binary patch
+literal 162
+zc%17D@N?(olHy`uVBq!ia0vp^5+KaM1SIoCSFHz9jKx9jP7LeL$-D$|Vmw_OLo9le
+zQxXz>{Qv*|<KyF!Cs<osTh;yNr6@()OD&k?s8bM@n5ejNmj4_JMt)(jl+Fng1UAK*
+z{5X_xWkF!G8?RIno8qa(!s>nj#}&Lz)vs_A6BC;v;g||Eyg{@xu=3SApgjzpu6{1-
+HoD!M<JvlVn
+
+diff --git a/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border_top.png b/src/main/resources/assets/fancytabsections/textures/gui/index_panel/slot_border_top.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..cb075279a435a2421bfa1b3681f0ab975f7f2c61
+GIT binary patch
+literal 151
+zc%17D@N?(olHy`uVBq!ia0vp^5+KaM1SIoCSFHz9jKx9jP7LeL$-D$|0zF+ELo9le
+z6Ba1_@Ru|&H&0JUNNAi<`sYU>SL|V?bWt&}NvnPy=@c#y-=N^#($X^Ft&-ZN(mpAZ
+xtP3j~7qb}}ESTc1?l)&apQFgMZO!^U3?^~DvwIt^e+3%O;OXk;vd$@?2>^Y*F=PM$
+
