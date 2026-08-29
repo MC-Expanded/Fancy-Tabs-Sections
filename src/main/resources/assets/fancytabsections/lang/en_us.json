@@ -1,8 +1,8 @@
 {
   "fancytabsections.configuration.index_expanded": "Expanded Index",
 
-  "itemGroup.fancytabsections.fancy_things": "Shiny Things",
-  "itemGroup.fancytabsections.dirty_tools": "Dirty Tools",
+  "itemGroup.fancytabsections.fancy_things": "[FTS dev only] Shiny Things",
+  "itemGroup.fancytabsections.dirty_tools": "[FTS dev only] Dirty Tools",
 
   "section.fancytabsections.shiny_things": "Shiny Things",
   "section.fancytabsections.pretty_things": "Pretty Things!",

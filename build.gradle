@@ -24,7 +24,9 @@ repositories {
 
 dependencies {
     //wdUtils
-    jarJar(implementation("com.wdiscute:wdUtils:1.2-NEOFORGE-1.21.1"))
+    jarJar(implementation("com.wdiscute:wdUtils:1.7-NEOFORGE-1.21.1"))
+
+
 }
 
 publishing {
