@@ -1,12 +1,13 @@
 package net.mcexpanded.fancytabsections.Section;
 
-import com.wdiscute.utils.ScreenUtils;
 import net.mcexpanded.fancytabsections.creativetab.ConglomerateOfItems;
+import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Consumer;
@@ -62,25 +63,25 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false);
-                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow);
-                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78 + 1, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow);
-                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78 - 1, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false);
+                centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false);
+                centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow);
+                centeredScrollingText(guiGraphics, font, title, topLeftX + 78 + 1, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow);
+                centeredScrollingText(guiGraphics, font, title, topLeftX + 78 - 1, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false);
             }
 
-            ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow);
+            centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow);
         }
         else
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false, 100);
-                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow, 100);
-                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow, 100);
-                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false, 100);
+                scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false, 100);
+                scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow, 100);
+                scrollingText(guiGraphics, font, title, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow, 100);
+                scrollingText(guiGraphics, font, title, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false, 100);
             }
 
-            ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow, 100);
+            scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow, 100);
         }
     }
 
@@ -271,5 +272,61 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     public boolean isSticky()
     {
         return sticky;
+    }
+
+    /**
+     * From wdUtils
+     *
+     * @since 6.2
+     */
+    public static void centeredScrollingText(GuiGraphics guiGraphics, Font font, Component text, int centerX, int minX, int maxX, int y, int color, boolean shadow)
+    {
+        int i = font.width(text);
+        int k = maxX - minX;
+        if (i > k)
+        {
+            int l = i - k;
+            double d0 = (double) Util.getMillis() / (double) 300.0F;
+            double d1 = Math.max((double) l * (double) 0.5F, 3.0F);
+            double d2 = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * d0 / d1)) / (double) 2.0F + (double) 0.5F;
+            double d3 = Mth.lerp(d2, 0.0F, l);
+            guiGraphics.enableScissor(minX, y - 10, maxX, y + 10);
+            int x = minX - (int) d3;
+            guiGraphics.drawString(font, text, x, y, color, shadow);
+            guiGraphics.disableScissor();
+        }
+        else
+        {
+            int i1 = Mth.clamp(centerX, minX + i / 2, maxX - i / 2);
+            guiGraphics.drawString(font, text.getVisualOrderText(), i1 - font.width(text.getVisualOrderText()) / 2, y, color, shadow);
+        }
+    }
+
+    /**
+     * From wdUtils
+     *
+     * @since 6.2
+     */
+    public static void scrollingText(GuiGraphics guiGraphics, Font font, Component text, int minX, int maxX, int y, int color, boolean shadow, int scrollingSpeed)
+    {
+        int i = font.width(text);
+        int k = maxX - minX;
+        if (i > k)
+        {
+            int l = i - k;
+            double d0 = (double) Util.getMillis() / (double) scrollingSpeed;
+            double d1 = Math.max((double) l * (double) 0.5F, 3.0F);
+            double d2 = Math.sin((Math.PI / 2D) * Math.cos((Math.PI * 2D) * d0 / d1)) / (double) 2.0F + (double) 0.5F;
+            double d3 = Mth.lerp(d2, 0.0F, l);
+            guiGraphics.enableScissor(minX, y - 20, maxX, y + 20);
+            int x = minX - (int) d3;
+            guiGraphics.drawString(font, text, x, y, color, shadow);
+            guiGraphics.disableScissor();
+        }
+        else
+        {
+            int i1 = Mth.clamp(minX, minX + i / 2, maxX - i / 2);
+            guiGraphics.drawString(font, text.getVisualOrderText(), i1 - font.width(text.getVisualOrderText()) / 2, y, color, shadow);
+        }
     }
 }

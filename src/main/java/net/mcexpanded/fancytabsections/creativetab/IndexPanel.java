@@ -1,6 +1,5 @@
 package net.mcexpanded.fancytabsections.creativetab;
 
-import com.wdiscute.utils.ScreenUtils;
 import net.mcexpanded.fancytabsections.FTSConfig;
 import net.mcexpanded.fancytabsections.FTSInternal;
 import net.mcexpanded.fancytabsections.Section.Section;
