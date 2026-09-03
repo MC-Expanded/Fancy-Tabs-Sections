@@ -41,8 +41,6 @@ repositories {
 }
 
 dependencies {
-    //wdUtils
-    jarJar(implementation("com.wdiscute:wdUtils:1.8-NEOFORGE-26.1.2"))
 }
 
 configurations {
