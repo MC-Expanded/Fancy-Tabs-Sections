@@ -58,25 +58,25 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78 + 1, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow);
-                ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78 - 1, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false);
+                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false);
+                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow);
+                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78 + 1, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow);
+                ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78 - 1, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false);
             }
 
-            ScreenUtils.renderCenteredScrollingString(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow);
+            ScreenUtils.centeredScrollingText(guiGraphics, font, title, topLeftX + 78, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow);
         }
         else
         {
             if (textOutline != 0x00000000)
             {
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow, 100);
-                ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false, 100);
+                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY - 1, textOutline, false, 100);
+                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY + 1, textOutline, textShadow, 100);
+                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX + 1, topLeftX + 137 + 1, topLeftY, textOutline, textShadow, 100);
+                ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX - 1, topLeftX + 137 - 1, topLeftY, textOutline, false, 100);
             }
 
-            ScreenUtils.renderScrollingString(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow, 100);
+            ScreenUtils.scrollingText(guiGraphics, font, title, topLeftX, topLeftX + 137, topLeftY, textColor, textShadow, 100);
         }
     }
 
@@ -228,7 +228,7 @@ public abstract class AbstractSectionWithTitle<T extends AbstractSectionWithTitl
     }
 
     /**
-     * Sets a consumer to run at the start of {@link Section#render(GuiGraphics, Font, int, int)} is called for this Section.
+     * Sets a consumer to run at the start of {@link Section#render(GuiGraphicsExtractor, Font, int, int)} is called for this Section.
      *
      * @since 6.0
      */
