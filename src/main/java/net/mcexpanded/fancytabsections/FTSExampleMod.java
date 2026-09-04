@@ -6,6 +6,7 @@ import net.mcexpanded.fancytabsections.Section.SectionTextured;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockItemTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -150,7 +151,7 @@ public class FTSExampleMod
                         //.setTextureOffset(1, 1)
 
                         //adds all items of this TagKey<Item>
-                        .addItemTag(ItemTags.FLOWERS)
+                        .addItemTag(BlockItemTags.FLOWERS.item())
                         //if tag has no items, none are added
                         .addItemTag(TagKey.create(Registries.ITEM, rl("unavailable_item_tag")))
         );
