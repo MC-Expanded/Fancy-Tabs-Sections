@@ -8,7 +8,7 @@ issueTrackerURL="https://github.com/MC-Expanded/Fancy-Tabs-Neo/issues" #optional
 
 [[mods]] #mandatory
 modId="fancytabsections"
-version="5.0-FORGE-1.20.1"
+version="6.2-FORGE-1.20.1"
 displayName="Fancy Tab Sections"
 displayURL="http://curseforge.com/minecraft/mc-mods/fancy-tab-sections"
 logoFile = "icon.png"

@@ -7,11 +7,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -30,6 +33,38 @@ public interface Section<T extends Section<T>>
     {
         return true;
     }
+
+    /**
+     * @return A display title for this section, or null if it doesn't have one.
+     * Lets features that need a human-readable label (e.g. a jump list) work with any
+     * Section implementation, without needing to know its concrete type.
+     *
+     * @since 6.0
+     */
+    default Component title()
+    {
+        return Component.translatable("section." + id().getNamespace() + "." + id().getPath());
+    }
+
+    /**
+     * @return A display icon for this section, to be used on the Section Index
+     *
+     * @since 6.0
+     */
+    default ItemStack icon()
+    {
+        return items().getStacks().stream().filter(o -> !o.isEmpty()).findFirst().orElse(Items.DIAMOND.getDefaultInstance());
+    }
+
+    /**
+     * Runs everytime the section items are reloaded
+     *
+     * @since 6.0
+     */
+    default void onReload(RegistryAccess registryAccess)
+    {
+    }
+
 
     ConglomerateOfItems items();
 

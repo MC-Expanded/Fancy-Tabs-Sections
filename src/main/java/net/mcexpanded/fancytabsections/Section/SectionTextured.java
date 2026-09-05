@@ -38,7 +38,6 @@ public class SectionTextured extends AbstractSectionWithTitle<SectionTextured>
     {
         super(id);
         this.texture = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "textures/gui/fancy_tab_section/" + id.getPath() + ".png");
-        this.title = Component.translatable("section." + id.getNamespace() + "." + id.getPath());
     }
 
     /**

@@ -5,6 +5,7 @@ import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.mcexpanded.fancytabsections.Section.SectionTextured;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -19,6 +20,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -46,9 +48,9 @@ public class FTSExampleMod
         if (FMLLoader.isProduction()) return;
 
         //register a CreativeModeTab, either using FancyTabSection's helper, or doing our own setup as usual
-        FancyTabSections.registerCreativeModeTab(modEventBus, rl("dirty_tools"), Items.STONE_AXE);
-        //register a second CreativeModeTab
         FancyTabSections.registerCreativeModeTab(modEventBus, rl("fancy_things"), Items.DIAMOND);
+        //register a second CreativeModeTab
+        FancyTabSections.registerCreativeModeTab(modEventBus, rl("dirty_tools"), Items.STONE_AXE);
 
         //register our custom items
         FTSExampleModItems.register(modEventBus);
@@ -112,6 +114,9 @@ public class FTSExampleMod
                         .setFrameTimeInMS(200)
                         .setCollapsible(false)
 
+                        //if the title should be rendered (you should still provide a title as it's used in the section index
+                        .setRenderTitle(false)
+
                         //adds an item
                         .add(Items.ENCHANTED_GOLDEN_APPLE)
                         //adds a list of ItemStacks
@@ -146,30 +151,10 @@ public class FTSExampleMod
                         //offset by 1 pixel right and down, so it's centered on the banner still
                         //.setTextureOffset(1, 1)
 
-                        //makes the texture appear "inside the row" rather than on top. Some people prefer this look
-                        .setTextureInsideRow()
-
                         //adds all items of this TagKey<Item>
                         .addItemTag(ItemTags.FLOWERS)
                         //if tag has no items, none are added
                         .addItemTag(TagKey.create(Registries.ITEM, rl("unavailable_item_tag")))
-        );
-
-        // This adds a third section to "fancy_things" consisting of a bunch of tags
-        FancyTabSections.addSection(rl("fancy_things"),
-                new SectionColored(rl("secret_things"))
-                        .setTextOutline(0xff456456)
-                        .addItemTag(ItemTags.LOGS)
-                        .addItemTag(ItemTags.PLANKS)
-                        .addItemTag(ItemTags.LEAVES)
-                        .addItemTag(ItemTags.WOODEN_SLABS)
-                        .addItemTag(ItemTags.WOODEN_STAIRS)
-                        .addItemTag(ItemTags.WOODEN_FENCES)
-                        .addItemTag(ItemTags.FENCE_GATES)
-                        .addItemTag(ItemTags.WOODEN_DOORS)
-                        .addItemTag(ItemTags.WOODEN_TRAPDOORS)
-                        .addItemTag(ItemTags.WOODEN_PRESSURE_PLATES)
-                        .addItemTag(ItemTags.WOODEN_BUTTONS)
         );
 
         // This adds a forth section to "fancy_things"
@@ -201,6 +186,98 @@ public class FTSExampleMod
                             ItemStack beef = Items.COOKED_BEEF.getDefaultInstance();
                             beef.setCount(27);
                             return beef;
+                        })
+        );
+
+        //yet another section
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionTextured(rl("dirt"))
+                        //makes the texture appear "inside the row" rather than on top. Some people prefer this look
+                        .setTextureInsideRow()
+
+                        .add(Items.GRASS_BLOCK)
+                        .add(Items.PODZOL)
+                        .add(Items.MYCELIUM)
+                        .add(Items.DIRT_PATH)
+                        .add(Items.AIR)
+                        .add(Items.DIRT)
+                        .add(Items.COARSE_DIRT)
+                        .add(Items.FARMLAND)
+                        .add(Items.ROOTED_DIRT)
+        );
+
+        //and one more to test the scrolling
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("stone"))
+                        .setBannerColor(0xff845858)
+
+                        .setCentered(true)
+                        .setTextColor(0xffffffff)
+                        .setTextOutline(0xff000000)
+                        .setTextShadow(true)
+
+                        .add(Items.STONE)
+                        .add(Items.DEEPSLATE)
+                        .add(Items.DRIPSTONE_BLOCK)
+                        .add(Items.BLACKSTONE)
+                        .add(Items.COBBLESTONE)
+        );
+
+        //one more...
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("colors"))
+                        .setOnRenderConsumer((section) ->
+                        {
+                            //sets the banner color to an RGB value based on the system time
+                            section.setBannerColor(Color.HSBtoRGB((System.currentTimeMillis() % 5000L) / 5000f, 1f, 1f));
+                        })
+
+                        .setBannerColor(0xffbbddaa)
+                        .setCentered(true)
+
+                        .setTitle(Component.empty()
+                                .append(Component.literal("C").withStyle(Style.EMPTY.withColor(0xFFff0000)))
+                                .append(Component.literal("O").withStyle(Style.EMPTY.withColor(0xFFffff00)))
+                                .append(Component.literal("L").withStyle(Style.EMPTY.withColor(0xFF00ff00)))
+                                .append(Component.literal("O").withStyle(Style.EMPTY.withColor(0xFF00ffff)))
+                                .append(Component.literal("R").withStyle(Style.EMPTY.withColor(0xFF0000ff)))
+                                .append(Component.literal("!").withStyle(Style.EMPTY.withColor(0xFFff00ff)))
+                        )
+                        .setTextShadow(false)
+
+                        .addItemTag(ItemTags.WOOL)
+                        .addItemTag(ItemTags.WOOL_CARPETS)
+                        .addItemTag(ItemTags.BANNERS)
+                        .addItemTag(ItemTags.TERRACOTTA)
+                        //addItemTag(ItemTags.DYEABLE)
+        );
+
+        // Yet another section to "fancy_things" consisting of a bunch of tags
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("secret_things"))
+                        .setTextOutline(0xff456456)
+                        .addItemTag(ItemTags.LOGS)
+                        .addItemTag(ItemTags.PLANKS)
+                        .addItemTag(ItemTags.LEAVES)
+                        .addItemTag(ItemTags.WOODEN_SLABS)
+                        .addItemTag(ItemTags.WOODEN_STAIRS)
+                        .addItemTag(ItemTags.WOODEN_FENCES)
+                        .addItemTag(ItemTags.FENCE_GATES)
+                        .addItemTag(ItemTags.WOODEN_DOORS)
+                        .addItemTag(ItemTags.WOODEN_TRAPDOORS)
+                        .addItemTag(ItemTags.WOODEN_PRESSURE_PLATES)
+                        .addItemTag(ItemTags.WOODEN_BUTTONS)
+        );
+
+        //A section with no items
+        FancyTabSections.addSection(rl("fancy_things"),
+                new SectionColored(rl("empty"))
+                        .setDisplayItem((registryAccess) ->
+                        {
+                            ItemStack barrier = Items.BARRIER.getDefaultInstance();
+
+                            barrier.enchant(Enchantments.MENDING, 1);
+                            return barrier;
                         })
         );
     }

@@ -4,7 +4,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -174,7 +173,6 @@ public class ConglomerateOfItems
 
     /**
      * Add a List of ItemStacks to the conglomerate.
-     *
      * @since 4.0
      */
     public ConglomerateOfItems add(List<ItemStack> listofStacks)
