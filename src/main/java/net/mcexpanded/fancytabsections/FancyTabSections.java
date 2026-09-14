@@ -13,12 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class FancyTabSections
 {
     public static final String MOD_ID = "fancytabsections";
-    public static final Map<ResourceLocation, List<Section<?>>> REGISTERED_TABS = new HashMap<>();
+    public static final Map<ResourceLocation, List<Section<?>>> REGISTERED_TABS = new ConcurrentHashMap<>();
 
     /**
      * An example of an implementation can be found on FTSExampleMod.

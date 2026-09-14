@@ -32,6 +32,19 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
 }
 
+publishing {
+    repositories {
+        maven {
+            url = "$rootDir/build/maven"
+        }
+    }
+
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
 
 base {
     archivesName = mod_id
