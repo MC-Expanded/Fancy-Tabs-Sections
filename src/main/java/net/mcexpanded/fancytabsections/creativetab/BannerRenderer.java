@@ -17,7 +17,7 @@ public class BannerRenderer
 
     public static int CURRENT_ROW = 0;
 
-    public static ResourceLocation CURRENT_TAB = null;
+    public static ResourceLocation CURRENT_TAB = ResourceLocation.fromNamespaceAndPath("minecraft", "none");
 
     public static final int ROW_HEIGHT = 18;
     public static final int GRID_COLS = 9;

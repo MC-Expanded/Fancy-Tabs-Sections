@@ -97,7 +97,6 @@ public class FTSInternal
     public static void tagsUpdatedEvent(TagsUpdatedEvent event)
     {
         refreshAllItems(event.getRegistryAccess());
-        BannerRenderer.CURRENT_TAB = null;
     }
 
     /**
