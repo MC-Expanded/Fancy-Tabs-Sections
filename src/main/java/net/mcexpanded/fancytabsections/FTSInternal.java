@@ -5,6 +5,7 @@ import net.mcexpanded.fancytabsections.Section.StickySection;
 import net.mcexpanded.fancytabsections.creativetab.BannerRenderer;
 import net.mcexpanded.fancytabsections.mixin.CreativeModeTabAccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -14,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -97,6 +99,10 @@ public class FTSInternal
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void tagsUpdatedEvent(TagsUpdatedEvent event)
     {
+        // Ignore the integrated server's data load, only react to what the client actually received
+        if (event.getUpdateCause() != TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED)
+            return;
+
         refreshAllItems(event.getRegistryAccess());
     }
 
