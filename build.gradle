@@ -48,6 +48,24 @@ publishing {
         }
     }
 
+    repositories {
+        if(System.getenv("MAVEN_USER") == null || System.getenv("MAVEN_PASS") == null) {
+            mavenLocal()
+        }
+        else maven {
+            name = "wd"
+            url = uri("https://maven.kaupenjoe.net/releases")
+
+            System.out.println(System.getenv("MAVEN_USER"))
+            System.out.println(System.getenv("MAVEN_PASS"))
+
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
+
     publications {
         gpr(MavenPublication) {
             from(components.java)
